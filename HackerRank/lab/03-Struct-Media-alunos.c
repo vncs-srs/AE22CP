@@ -76,6 +76,7 @@ typedef struct aluno
     float n1,n2,n3;
 }Aluno;
 
+//Calcula o coeficiente.
 Aluno media_vec(Aluno v3)
 {
     v3.coef=(v3.n1+v3.n2+v3.n3)/3.0;
@@ -87,24 +88,28 @@ int main(void)
 {
     int dim,i;
 
-    scanf("%d",&dim);
+    // Numero de Alunos.
+    scanf("%d",&dim); 
 
     Aluno vetor[dim];
     
     Aluno maior,menor,maiorp1;
 
+    //Inicializacao de variavel
     maior.coef=-99;
     menor.coef=100.01;
 
+    //Entrada de dados 
     for ( i = 0; i < dim; i++)
     {
 
-        scanf("%d",&vetor[i].RA);
+        scanf("%d",&vetor[i].RA); 
         scanf("%s",vetor[i].nome);
-        scanf("%f %f %f",&vetor[i].n1,&vetor[i].n2,&vetor[i].n3);
+        scanf("%f %f %f",&vetor[i].n1,&vetor[i].n2,&vetor[i].n3); //Notas dos alunos.
 
-        vetor[i] = media_vec(vetor[i]);
+        vetor[i] = media_vec(vetor[i]); //Faz a media
 
+        //Verifica as medias entre maior, menor e verifica a maior p1.
         if (vetor[i].coef > maior.coef)
         {
             maior=vetor[i];
@@ -120,6 +125,7 @@ int main(void)
         
     }
     
+    //Verifica se o Aluno foi aprovado ou reprovdo.
     for ( i = 0; i < dim ; i++)
     {
         if (vetor[i].coef>=6)
@@ -133,6 +139,7 @@ int main(void)
         
     }
     
+    //Mostra a maior, menor nota e a maior p1.
     printf("O aluno com maior media e: %d %s %.1f\n",maior.RA,maior.nome,maior.coef);
     printf("O aluno com menor media e: %d %s %.1f\n",menor.RA,menor.nome,menor.coef);
     printf("O aluno com maior P1 e: %d %s %.1f\n",maiorp1.RA,maiorp1.nome,maiorp1.n1);
