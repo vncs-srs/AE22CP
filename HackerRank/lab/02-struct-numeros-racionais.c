@@ -22,14 +22,35 @@ Sample Output 0
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct 
 {
     int x;
     int y;
-}num;
+}racional;
 
-num racinal(num v1,num v2)
+racional divide_rac(racional v1,racional v2)
 {
+    racional v3;
 
+    v3.x=v1.x*v2.y;
+    v3.y=v1.y*v2.x;
+
+    return(v3);
 } 
+
+int main() 
+{
+    racional v1,v2,v3;  
+
+    scanf("%d %d",&v1.x,&v1.y);  
+    scanf("%d %d",&v2.x,&v2.y);   
+
+    v3= divide_rac(v1,v2); 
+
+    printf("%d %d",v3.x,v3.y);
+
+    
+    return 0;
+}
