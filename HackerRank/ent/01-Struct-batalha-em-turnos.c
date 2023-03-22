@@ -73,35 +73,91 @@ et_bilu*/
 #include <stdlib.h>
 #include <string.h>
 
-#define dim 10
+#define dim 2
 
 typedef struct personagem
 {
     char nome[100];
     int energia;
     int defesa;
-    int forca; 
+    int forca;
+    int d1,d2; 
 }Personagem;
 
-Personagem dano (Personagem v1)
+//Calcula a vida restante de cada personagem
+Personagem dano_vec ( int v1,Personagem v2)
 {
+    Personagem v3;
+    v3.energia=v1-v2.forca;
+    v3.defesa=v2.defesa;
+    v3.forca=v2.forca;
+    v3.d1=v2.d1;
+    v3.d2=v2.d2;
 
+    return(v3);
 }
 
 int main(void)
 {
-    int i;
+    int i,rodadas,defesa_total[dim];
 
     Personagem vetor_p[dim];
+    Personagem danop1;
+    Personagem danop2;
     
+    //Entrada de dados dos personagens
     for ( i = 0; i < dim; i++)
     {
-        scanf("%s",vetor_p[i].nome);
-        scanf("%d",&vetor_p[i].energia);
-        scanf("%d",&vetor_p[i].defesa);
-        scanf("%d",&vetor_p[i].forca);
+        scanf("%s %d %d %d",vetor_p[i].nome,&vetor_p[i].energia,&vetor_p[i].defesa,&vetor_p[i].forca);
+        defesa_total[i]=vetor_p[i].energia+vetor_p[i].defesa;
     }
-    
+    danop1.energia=defesa_total[0];
+    danop2.energia=defesa_total[1];
+
+    //Entrada do numero de rodadas
+    scanf("%d",&rodadas);
+
+    //Verificar se dar empate atravez dos atributos (iguais)
+    if ( danop1.d1==danop2.d2 && vetor_p[0].forca==vetor_p[1].forca)
+    {
+        printf("empate\n");
+    }
+
+    //Verificar em cada rodada se o pesonagem zerou os pontos de vida 
+    else
+    {
+        for ( i = 0; i < rodadas; i++)
+        {
+            if (danop1.energia>0)
+            {
+                danop1=dano_vec(danop1.energia,vetor_p[i]);
+            }
+            else if (danop2.energia>0)
+            {
+                danop2=dano_vec(danop2.energia,vetor_p[i]);
+            }
+            else
+            {
+                break;
+            }
+
+        }
+
+        printf("%s %d\n",vetor_p[0].nome,danop1);
+        printf("%s %d\n",vetor_p[1].nome,danop2);
+        
+        //verifica o campeao
+        if (danop1.energia>danop2.energia)
+        {
+            printf("%s\n",vetor_p[0].nome);
+        }
+        else
+        {
+            printf("%s",vetor_p[1].nome);
+        }
+        
+    }
+   
 
 
 
