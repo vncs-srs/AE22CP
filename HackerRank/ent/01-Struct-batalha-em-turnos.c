@@ -118,7 +118,7 @@ int main(void)
     scanf("%d",&rodadas);
 
     //Verificar se dar empate atravez dos atributos (iguais)
-    if ( danop1.d1==danop2.d2 && vetor_p[0].forca==vetor_p[1].forca)
+    if ( defesa_total[0]==defesa_total[1] && vetor_p[0].forca==vetor_p[1].forca)
     {
         printf("empate\n");
     }
