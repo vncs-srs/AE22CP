@@ -81,88 +81,74 @@ typedef struct personagem
     int energia;
     int defesa;
     int forca;
-    int d1,d2; 
+    //int d1,d2; 
 }Personagem;
 
-//Calcula a vida restante de cada personagem
-Personagem dano_vec ( int v1,Personagem v2)
+void atacar(Personagem *atacante, Personagem *atacado) 
 {
-    Personagem v3;
-    v3.energia=v1-v2.forca;
-    v3.defesa=v2.defesa;
-    v3.forca=v2.forca;
-    v3.d1=v2.d1;
-    v3.d2=v2.d2;
+    int dano = atacante->forca - atacado->defesa;
+    if (dano <= 0) 
+    {
+        dano = 1;
+    }
+    atacado->energia -= dano;
+    if (atacado->energia < 0) 
+    {
+        atacado->energia = 0;
+    }
+}
+void batalha(Personagem *p1, Personagem *p2, int turnos) 
+{
+    int i;
+    for (i = 0; i < turnos; i++) 
+    {
 
-    return(v3);
+        atacar(p1, p2);
+          
+        atacar(p2, p1);
+        
+        if (p1->energia == 0 || p2->energia == 0) 
+        {
+            break;
+        }
+    }
+    if (p1->energia == p2->energia) 
+    {
+        printf("%s %d\n", p1->nome, p1->energia);
+        printf("%s %d\n", p2->nome, p2->energia);
+        printf("empate\n");
+    } 
+    else if (p1->energia > p2->energia) 
+    {
+        printf("%s %d\n", p1->nome, p1->energia);
+        printf("%s %d\n", p2->nome, p2->energia);
+        printf("%s\n", p1->nome);
+    } 
+    else 
+    {
+        printf("%s %d\n", p1->nome, p1->energia);
+        printf("%s %d\n", p2->nome, p2->energia);
+        printf("%s\n", p2->nome);
+    }
+
 }
 
 int main(void)
 {
-    int i,rodadas,defesa_total[dim];
+    //int i,rodadas,defesa_total[dim];
+
+    int turnos,i;
 
     Personagem vetor_p[dim];
-    Personagem danop1;
-    Personagem danop2;
     
     //Entrada de dados dos personagens
     for ( i = 0; i < dim; i++)
     {
         scanf("%s %d %d %d",vetor_p[i].nome,&vetor_p[i].energia,&vetor_p[i].defesa,&vetor_p[i].forca);
-        defesa_total[i]=vetor_p[i].energia+vetor_p[i].defesa;
     }
-    danop1.energia=defesa_total[0];
-    danop2.energia=defesa_total[1];
-
-    //Entrada do numero de rodadas
-    scanf("%d",&rodadas);
-
-    //Verificar se dar empate atravez dos atributos (iguais)
-    if ( defesa_total[0]==defesa_total[1] && vetor_p[0].forca==vetor_p[1].forca)
-    {
-        printf("empate\n");
-    }
-
-    //Verificar em cada rodada se o pesonagem zerou os pontos de vida 
-    else
-    {
-        for ( i = 0; i < rodadas; i++)
-        {
-            if (danop1.energia>0)
-            {
-                danop1=dano_vec(danop1.energia,vetor_p[i]);
-            }
-            else if (danop2.energia>0)
-            {
-                danop2=dano_vec(danop2.energia,vetor_p[i]);
-            }
-            else
-            {
-                break;
-            }
-
-        }
-
-        printf("%s %d\n",vetor_p[0].nome,danop1);
-        printf("%s %d\n",vetor_p[1].nome,danop2);
-        
-        //verifica o campeao
-        if (danop1.energia>danop2.energia)
-        {
-            printf("%s\n",vetor_p[0].nome);
-        }
-        else
-        {
-            printf("%s",vetor_p[1].nome);
-        }
-        
-    }
-   
-
-
+    scanf("%d", &turnos);
+    batalha(&vetor_p[0], &vetor_p[1],turnos);
 
     return 0;
+
 }
-
-
-
