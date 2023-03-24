@@ -68,7 +68,6 @@ orcson 0
 et_bilu*/
 
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,10 +79,10 @@ typedef struct personagem
     char nome[100];
     int energia;
     int defesa;
-    int forca;
-    //int d1,d2; 
+    int forca; 
 }Personagem;
 
+//Caulcula o dano de cada ataque
 void atacar(Personagem *atacante, Personagem *atacado) 
 {
     int dano = atacante->forca - atacado->defesa;
@@ -97,14 +96,20 @@ void atacar(Personagem *atacante, Personagem *atacado)
         atacado->energia = 0;
     }
 }
+
+//Funcao batalha chama a funcao ataque a cada rodada e mostra o vencedor
 void batalha(Personagem *p1, Personagem *p2, int turnos) 
 {
     int i;
     for (i = 0; i < turnos; i++) 
     {
-
         atacar(p1, p2);
-          
+        
+        if (p2->energia<=0)
+        {
+            break;
+        }
+        
         atacar(p2, p1);
         
         if (p1->energia == 0 || p2->energia == 0) 
@@ -135,8 +140,6 @@ void batalha(Personagem *p1, Personagem *p2, int turnos)
 
 int main(void)
 {
-    //int i,rodadas,defesa_total[dim];
-
     int turnos,i;
 
     Personagem vetor_p[dim];
