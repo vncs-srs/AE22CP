@@ -34,20 +34,13 @@ typedef struct
 }vetor;
 
 
-vetor* diagonal(int matriz,int N)
+vetor* diagonal(int N)
 {
+    int i, j=0;
+
     vetor* v = (vetor*) malloc(sizeof(vetor));
-    v->n = matriz;
+    v->n = N;
     v->item = (int*) malloc(sizeof(int) * N);
-    return v;
-}
-
-
-int main(void)
-{
-    int N,i,j;
-
-    scanf("%d",&N);
 
     int matriz[N][N];
 
@@ -66,13 +59,32 @@ int main(void)
         {
             if (i==j)
             {
-                vetor *x = diagonal(matriz[i][j],N);
-                printf("%d ",x->item[i]);
+                v->item[i]=matriz[i][j];  
             }
-
+            
         }
         
     }
+    
+
+
+    return v;
+}
+
+
+int main(void)
+{
+    int N,i,j;
+
+    scanf("%d",&N);
+          
+    vetor *x = diagonal(N);
+    for ( i = 0; i < N; i++)
+    {
+        printf("%d ",x->item[i]); 
+    }
+        
+     
     
 
     return 0;
