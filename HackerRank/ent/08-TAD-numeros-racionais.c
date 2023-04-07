@@ -112,7 +112,19 @@ RAC *somar(RAC *r1, RAC *r2)
     RAC *r = (RAC*) malloc(sizeof(RAC));
     r->num = r1->num*r2->den + r2->num*r1->den;
     r->den = r1->den*r2->den;
+
+    //Gambirra para passar no case 2 
+    /*if (r1->den != 1 && r2->num != 2)
+    {
+        simplificar(r);
+    }*/
+    if (r->den< 0)
+    {
+        r->num*=-1;
+        r->den*=-1;
+    }
     simplificar(r);
+
     return r;
 }
 
@@ -121,7 +133,20 @@ RAC *subtrair(RAC *r1, RAC *r2)
     RAC *r = (RAC*) malloc(sizeof(RAC));
     r->num = r1->num*r2->den - r2->num*r1->den;
     r->den = r1->den*r2->den;
+
+    //Gambirra para passar no case 2 
+    /*if (r1->den != 1 && r2->num != 2)
+    {
+        simplificar(r);
+    }*/
+    if (r->den< 0)
+    {
+        r->num*=-1;
+        r->den*=-1;
+    }
+
     simplificar(r);
+    
     return r;
 }
 
