@@ -100,50 +100,94 @@ typedef struct personagem
     int energia;
     int defesa;
     int forca;
-    int A;
-    int golpe; 
+    int A1,A2,A3; 
 }Personagem;
 
-//Caulcula o dano de cada ataque
-void atacar(Personagem *atacante, Personagem *atacado) 
+void reduzir_energia(Personagem *p, int pontos_dano)
 {
-    int dano = atacante->forca + atacante->golpe - atacado->defesa;
+    int dano=pontos_dano-p->defesa;
+
     if (dano <= 0) 
     {
         dano = 1;
     }
-    atacado->energia -= dano;
-    if (atacado->energia < 0) 
+    p->energia -= dano;
+    if (p->energia < 0) 
     {
-        atacado->energia = 0;
+        p->energia = 0;
     }
+}
+
+void restaurar(Personagem *p)
+{
+    p->energia=p->energia+200;
+
+    if (p->energia>1000)
+    {
+        p->energia=1000;
+    }
+    
+}
+void atacar(Personagem *atacante, Personagem *atacado) 
+{
+    int golpe,p,pontos_dano;
+    char opcao;
+    scanf ("%d ",&p);
+    scanf("%c",&opcao);
+
+    switch (opcao)
+    {
+    case 'A':
+        scanf("%d",&golpe);
+
+        switch (golpe)
+        {
+        case 1:
+            pontos_dano = atacante->A1 + atacante->forca;
+            reduzir_energia(atacado,pontos_dano);
+            break;
+        case 2:
+            pontos_dano = atacante->A2 + atacante->forca;
+            reduzir_energia(atacado,pontos_dano);
+            break;
+        case 3:
+            pontos_dano = atacante->A3 + atacante->forca;
+            reduzir_energia(atacado,pontos_dano);
+            break;
+        
+        default:
+            break;
+        }
+        break;
+    case 'C':
+        restaurar(atacante);
+        break;
+    default:
+        break;
+    }
+    
 }
 
 //Funcao batalha chama a funcao ataque a cada rodada e mostra o vencedor
 void batalha(Personagem *p1, Personagem *p2, int turnos) 
 {
-    int i,j;
-    char opcao;
-    Personagem vetor_g[3];
+    int i;
     for (i = 0; i < turnos; i++) 
     {
-        printf("1 ");
-        scanf("%c",&opcao);
 
-        
-        atacar(p1, p2);
-        
+        if (i % 2 == 0)
+        {
+            atacar(p1, p2);
+        } 
         if (p2->energia<=0)
         {
             break;
         }
-        
-        atacar(p2, p1);
-        
-        if (p1->energia == 0 || p2->energia == 0) 
-        {
-            break;
+        else
+        {   
+            atacar(p2, p1);
         }
+        
     }
     if (p1->energia == p2->energia) 
     {
@@ -170,18 +214,14 @@ int main(void)
 {
     int turnos,i;
 
-    Personagem vetor_p[dim],golpe[3];
+    Personagem vetor_p[dim];
     
     //Entrada de dados dos personagens
     for ( i = 0; i < dim; i++)
     {
-        scanf("%s %d %d %d",vetor_p[i].nome,&vetor_p[i].energia,&vetor_p[i].defesa,&vetor_p[i].forca);
-        for ( i = 0; i < 3; i++)
-        {
-            scanf("%d",&golpe[i].A);
-        }
-        
+        scanf("%s %d %d %d %d %d %d",vetor_p[i].nome,&vetor_p[i].energia,&vetor_p[i].defesa,&vetor_p[i].forca,&vetor_p[i].A1,&vetor_p[i].A2,&vetor_p[i].A3);  
     }
+    
     scanf("%d", &turnos);
     batalha(&vetor_p[0], &vetor_p[1],turnos);
 
