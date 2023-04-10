@@ -111,7 +111,7 @@ void reduzir_energia(Personagem *p, int pontos_dano)
     {
         dano = 1;
     }
-    p->energia -= dano;
+    p->energia = p->energia - dano;
     if (p->energia < 0) 
     {
         p->energia = 0;
@@ -130,17 +130,17 @@ void restaurar(Personagem *p)
 }
 void atacar(Personagem *atacante, Personagem *atacado) 
 {
-    int golpe,p,pontos_dano;
+    int G,P,pontos_dano;
     char opcao;
-    scanf ("%d ",&p);
+    scanf ("%d ",&P);
     scanf("%c",&opcao);
 
     switch (opcao)
     {
     case 'A':
-        scanf("%d",&golpe);
+        scanf("%d",&G);
 
-        switch (golpe)
+        switch (G)
         {
         case 1:
             pontos_dano = atacante->A1 + atacante->forca;
@@ -179,15 +179,13 @@ void batalha(Personagem *p1, Personagem *p2, int turnos)
         {
             atacar(p1, p2);
         } 
-        if (p2->energia<=0)
+        else 
         {
-            break;
-        }
-        else
-        {   
+            if (p2->energia<=0) break;
             atacar(p2, p1);
+
         }
-        
+       
     }
     if (p1->energia == p2->energia) 
     {
