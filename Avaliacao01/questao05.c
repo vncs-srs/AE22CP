@@ -49,7 +49,7 @@ int buscar(Lista *l,int expo)
         // Procurar na parte "não vazia" da lista
         for (i = 0; i < l->tam; i++)
         {
-            if (l->item[i] == expo)
+            if (l->item[i].expo == 0)
             {
                 return i;
             }
@@ -61,35 +61,54 @@ int buscar(Lista *l,int expo)
 
 int polinomio(Lista *l,int x)
 {
-    int i,P,aux,expo;
+    int i,r=0;
+
     for ( i = 0; i < l->tam; i++)
     {
-        
-        aux=pow(expo,l->item[i]);
-
-        P=P+aux;
+        r +=l->item[i].cons * pow(x,l->item[i].expo);
     }
     
-    return P;
+    return r;
 }
 
 void mastrar_polinomio(Lista *l,int x)
 {
     int i;
+    char polinomio[100];
 
 
-    for (i = 0; i < l->tam; i++)
+    for (i = 1; i < l->tam; i++)
     {
-        printf("(%d)^%d + ",x ,l->item[i]);
+        if (l->item[i].cons > 0)
+        {
+            sprintf(polinomio + strlen(polinomio)," + %d^%d",l->item[i].cons,l->item[i].expo);
+        }
+        else
+        {
+            sprintf(polinomio + strlen(polinomio)," - %d^%d",l->item[i].cons,l->item[i].expo);
+
+        }
     }
 
-    printf("\n");
+    printf("%s\n",polinomio);
 }
 
-/*void inserir(Lista *l,int expo , int const)
+int inserir(Lista *l, int expo,int cons)
 {
-    polinomio(expo);
-}*/
+    int busca_expo,i;
+    Lista* L1 = criar_lista();
+    busca_expo = buscar(L1,expo);
+
+    if (busca_expo==cons)
+    {
+        busca_expo=cons;
+    }
+    else
+    {
+        
+    }
+    
+}
 
 /*int main(void)
 {
