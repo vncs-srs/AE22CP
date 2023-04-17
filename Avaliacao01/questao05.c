@@ -44,12 +44,12 @@ int buscar(Lista *l,int expo)
 {
     int i;
 
-    if (!lista_vazia(l))
+    if (!lista_cheia(l))
     {
         // Procurar na parte "não vazia" da lista
         for (i = 0; i < l->tam; i++)
         {
-            if (l->item[i].expo == 0)
+            if (l->item[i].expo == expo)
             {
                 return i;
             }
@@ -71,13 +71,13 @@ int polinomio(Lista *l,int x)
     return r;
 }
 
-void mastrar_polinomio(Lista *l,int x)
+void mostrar_polinomio(Lista *l)
 {
     int i;
     char polinomio[100];
 
 
-    for (i = 1; i < l->tam; i++)
+    for (i = 0; i < l->tam; i++)
     {
         if (l->item[i].cons > 0)
         {
@@ -85,8 +85,7 @@ void mastrar_polinomio(Lista *l,int x)
         }
         else
         {
-            sprintf(polinomio + strlen(polinomio)," - %d^%d",l->item[i].cons,l->item[i].expo);
-
+            sprintf(polinomio + strlen(polinomio)," %d^%d",l->item[i].cons,l->item[i].expo);
         }
     }
 
@@ -95,29 +94,55 @@ void mastrar_polinomio(Lista *l,int x)
 
 int inserir(Lista *l, int expo,int cons)
 {
-    int busca_expo,i;
-    Lista* L1 = criar_lista();
-    busca_expo = buscar(L1,expo);
+    // Se a lista for nula, podemos alocar um espaço para ela, já que
+    // pretendemos fazer uma inserção nela
+    if (l == NULL)
+        l = criar_lista();
 
-    if (busca_expo==cons)
+    if (!lista_cheia(l))
     {
-        busca_expo=cons;
+        int posicao = buscar(l, expo);
+
+        if (posicao == -1)
+        {
+            l->item[l->tam].expo = expo;
+            l->item[l->tam].cons = cons;
+
+            l->tam++;
+
+            return 1;
+        }
+        else
+        {
+            l->item[posicao].cons = cons;
+
+            return 1;
+        }
     }
-    else
-    {
-        
-    }
+
+
     
 }
 
-/*int main(void)
+int main(void)
 {
     Lista* L1 = criar_lista();
+    inserir(L1,3, 1);
+    inserir(L1,2, -2);
+    inserir(L1,1, 5);
+    inserir(L1,0, 1);
+    inserir(L1,3, -5);
 
+
+    mostrar_polinomio(L1);
+
+    int resul = polinomio(L1,2);
+
+    printf("\n Resultado: %d\n",resul);
 
     return 0;
 
-}*/
+}
 
 
 
