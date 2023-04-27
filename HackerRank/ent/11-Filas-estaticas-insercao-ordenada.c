@@ -41,6 +41,29 @@ struct Fila
 	int tam; // tamanho da fila
 };
 
+typedef struct Fila Fila;
+
+// Criar uma fila vazia
+Fila* criar_fila();
+
+// Verificar se a fila está cheia
+int fila_cheia(Fila *f);
+
+// Verificar se a fila está vazia
+int fila_vazia(Fila *f);
+
+// Colocar um item na fila
+int enfileirar(Fila *f, int chave);
+
+// remover um item da fila
+int desenfileirar(Fila *f);
+
+// Imprimir conteúdo da fila
+void imprimir_fila(Fila *f);
+
+// liberar fila
+void liberar_fila(Fila *f);
+
 // Criar uma fila vazia
 Fila* criar_fila()
 {
@@ -164,4 +187,88 @@ void imprimir_fila(Fila *f){
 void liberar_fila(Fila *f){
     if (f != NULL)
         free(f);
+}
+
+void inserirOrdenado(Fila *f, int chave) {
+    Fila aux;
+    criarFila(&aux);
+    
+    while (!filaVazia(f) && inicioFila(f) > chave)
+        enfileirar(&aux, desenfileirar(f));
+    
+    enfileirar(&aux, chave);
+    
+    while (!filaVazia(f))
+        enfileirar(&aux, desenfileirar(f));
+    
+    while (!filaVazia(&aux))
+        enfileirar(f, desenfileirar(&aux));
+}
+
+
+
+
+int main(void)
+{
+    int i,n,cont=0;
+    Fila *f = criar_fila();
+    Fila *faux = criar_fila();
+    Fila *faux2 = criar_fila();
+    Fila *faux3 = criar_fila();
+
+    do
+    {
+        scanf("%d",&n);   
+        enfileirar(f,n);
+        cont++;
+    }while (n!=-1);
+
+    do
+    {
+        int aux,aux2;
+
+        aux = desenfileirar(f);
+        
+        enfileirar(faux,aux);
+        if (f->ini=0)
+        {
+            aux2 = desenfileirar(f);
+        }
+        do
+        {
+            enfileirar(faux3,aux);
+            do
+            {
+                aux2=desenfileirar(faux2);
+            } while (faux2->ini+1);
+            
+        } while (faux2->fim=0);
+        
+        
+
+        enfileirar(faux2,aux2);
+        enfileirar(faux2,aux);
+
+
+        
+
+    } while (cont>0);
+    
+    
+/*for ( i = 1; i < cont+2; i++)
+{
+    if (f->fim-i)
+    {
+        enfileirar(faux,desenfileirar(f));
+    }
+    
+}*/
+    imprimir_fila(faux3);
+
+
+    
+    
+    
+    return 0;
+    
 }
