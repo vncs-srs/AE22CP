@@ -64,7 +64,7 @@ int enfileirar(Fila *f, int chave){
         // deve se atualizada. Antes da atualização, se a posição fim
         // for menor que a capacidade máxima da lista menos 1, basta
         // apenas incrementar o campo fim. Caso contrário, f->fim = 0;
-        if (f->fim < TAM_MAX - 1)
+        else if (f->fim < TAM_MAX - 1)
             f->fim++;
         else
             f->fim = 0;
