@@ -93,7 +93,7 @@ int fila_vazia(Fila *f){
     else if (f->tam > 0)
         return 0; // A fila não está vazia, pois o seu tamanho é maior que zero
     else
-        return 1; // fila vazia
+        return 1; // fila vazia*/
 }
 
 // Colocar um item na fila
@@ -118,7 +118,7 @@ int enfileirar(Fila *f, int chave){
         // deve se atualizada. Antes da atualização, se a posição fim
         // for menor que a capacidade máxima da lista menos 1, basta
         // apenas incrementar o campo fim. Caso contrário, f->fim = 0;
-        if (f->fim < TAM_MAX - 1)
+        else if (f->fim < TAM_MAX - 1)
             f->fim++;
         else
             f->fim = 0;
@@ -190,19 +190,28 @@ void liberar_fila(Fila *f){
 }
 
 void inserirOrdenado(Fila *f, int chave) {
-    Fila aux;
-    criarFila(&aux);
+    Fila *aux = criar_fila();
+    int elem;
     
-    while (!filaVazia(f) && inicioFila(f) > chave)
-        enfileirar(&aux, desenfileirar(f));
+    while (fila_vazia(f)!=1 && f->item[f->ini] > chave){
+        elem=desenfileirar(f);
+        enfileirar(aux, elem);
+        
+        }
+
+    enfileirar(aux,chave);
+
+    while (fila_vazia(f)!=1){
+        enfileirar(aux, desenfileirar(f));
+
+        }
     
-    enfileirar(&aux, chave);
-    
-    while (!filaVazia(f))
-        enfileirar(&aux, desenfileirar(f));
-    
-    while (!filaVazia(&aux))
-        enfileirar(f, desenfileirar(&aux));
+    while (fila_vazia(aux)!=1){
+        enfileirar(f, desenfileirar(aux));
+
+        }
+    free(aux);
+        
 }
 
 
@@ -210,64 +219,25 @@ void inserirOrdenado(Fila *f, int chave) {
 
 int main(void)
 {
-    int i,n,cont=0;
+    int i,n;
     Fila *f = criar_fila();
-    Fila *faux = criar_fila();
-    Fila *faux2 = criar_fila();
-    Fila *faux3 = criar_fila();
 
-    do
+
+    while (n!=-1)
     {
-        scanf("%d",&n);   
-        enfileirar(f,n);
-        cont++;
-    }while (n!=-1);
-
-    do
-    {
-        int aux,aux2;
-
-        aux = desenfileirar(f);
         
-        enfileirar(faux,aux);
-        if (f->ini=0)
+        scanf("%d",&n);  
+        if (n==-1)
         {
-            aux2 = desenfileirar(f);
+            break;
         }
-        do
-        {
-            enfileirar(faux3,aux);
-            do
-            {
-                aux2=desenfileirar(faux2);
-            } while (faux2->ini+1);
-            
-        } while (faux2->fim=0);
         
-        
-
-        enfileirar(faux2,aux2);
-        enfileirar(faux2,aux);
-
-
-        
-
-    } while (cont>0);
-    
-    
-/*for ( i = 1; i < cont+2; i++)
-{
-    if (f->fim-i)
-    {
-        enfileirar(faux,desenfileirar(f));
+        inserirOrdenado(f,n);
     }
-    
-}*/
-    imprimir_fila(faux3);
+
+    imprimir_fila(f);
 
 
-    
-    
     
     return 0;
     
