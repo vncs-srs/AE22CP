@@ -35,7 +35,7 @@ Sample Output 0
 #include <stdio.h>
 #include <stdlib.h>
 
-
+typedef struct Cell Cell; // Renomeação da struct Cell
 // Estrutura para representar células
 struct Cell{
     int item; // Pode ser uma struct, union, ou qualquer tipo de dados.
@@ -50,7 +50,7 @@ struct Cell{
 struct ListaE{
     Cell *head; // Ponteiro para o primeiro elemento da lista
 };
-typedef struct Cell Cell; // Renomeação da struct Cell
+
 
 typedef struct ListaE ListaE; // Renomeação da struct ListaE
 
@@ -351,7 +351,22 @@ int tamanho_LE(ListaE *l){
 
 void compara_LE(ListaE *l1,ListaE *l2)
 {
-    int l,lp;
+    ListaE *l3 = criar_listaE();
+
+    while(l1->head) 
+    {
+        inserir_primeiro(l1->head->item,l3);
+        l1->head = l1->head->next;
+    }
+
+
+    while(l2->head) 
+    {
+        inserir_primeiro(l2->head->item,l3);
+        l2->head = l2->head->next;
+    }
+
+    /*int l,lp;
     ListaE *l3 = criar_listaE();
 
     while (l!=-1)
@@ -368,7 +383,7 @@ void compara_LE(ListaE *l1,ListaE *l2)
             
         } 
         
-    }
+    }*/
     
 
     imprimir(l3);
