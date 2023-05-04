@@ -352,31 +352,59 @@ int tamanho_LE(ListaE *l){
 void compara_LE(ListaE *l1,ListaE *l2)
 {
     ListaE *l3 = criar_listaE();
+    Cell *aux1, *aux2;
+    aux1=l1->head;
+    aux2=l2->head;
 
-    while(l1->head) 
-    {
-        inserir_primeiro(l1->head->item,l3);
-        l1->head = l1->head->next;
-    }
+    while(aux1!=NULL) 
+    { 
+            int lp=procurar(aux1->item,l2);
 
-
-    while(l2->head) 
-    {
-        inserir_primeiro(l2->head->item,l3);
-        l2->head = l2->head->next;
-    }
-
-    /*int l,lp;
-    ListaE *l3 = criar_listaE();
-
-    while (l!=-1)
-    {
-        l=l1;
-        while (l2!=-1)
+            if (lp==1)
+            {
+                inserir_primeiro(aux1->item,l3);
+            }
+        //inserir_primeiro(l1->head->item,l3);
+        //l1->head = l1->head->next;
+        
+        /*while(aux2!=NULL) 
         {
-            lp=procurar(l,l2);
+            int lp=procurar(aux1->item,l2);
 
-            if (lp=l)
+            if (lp=l2->head->item)
+            {
+                inserir_primeiro(lp,l3);
+            }
+            
+            //inserir_primeiro(l2->head->item,l3);
+            //l2->head = l2->head->next;
+
+            if (aux2->item==aux1->item)
+            {
+                inserir_primeiro(aux2->item,l3);
+            }
+            aux2=aux2->next;
+
+        }*/
+        aux1 = aux1->next;
+
+          
+    }
+
+
+    /*int lp;
+    //ListaE *l3 = criar_listaE();
+
+    while (l1->head)
+    {
+        l1->head = l1->head->next;
+        while (l2->head)
+        {
+            l2->head = l2->head->next;
+
+            lp=procurar(l1->head->item,l2);
+
+            if (lp=l2->head->item)
             {
                 inserir_ordenado(lp,l3);
             }
@@ -384,9 +412,31 @@ void compara_LE(ListaE *l1,ListaE *l2)
         } 
         
     }*/
+
+    /*int tam=tamanho_LE(l1), tam2=tamanho_LE(l2),i;
+
+    for (i = 0; i < tam; i++)
+    {
+        l1->head = l1->head->next;
+
+        for ( i = 0; i < tam2; i++)
+        {
+            l2->head = l2->head->next;
+            if (l1->head=l2->head)
+            {
+                int aux=l1->head->item;
+                inserir_primeiro(aux,l3);
+            }
+            
+        }
+        
+    }*/
     
 
+
     imprimir(l3);
+    liberar_LE(l3);
+    
 
 }
 int main(void)
@@ -399,17 +449,22 @@ int main(void)
 
     do
     {
-        scanf("%d ",&n);
-        inserir_primeiro(n,l1);
-    } while (n!=-1);    
+        scanf("%d",&n);
+        if(n!=-1)
+            inserir_primeiro(n,l1);
+    } while (n!=-1);
+
     do
     {
-        scanf("%d ",&n);
-        inserir_primeiro(n,l2);
+        scanf("%d",&n);
+        if(n!=-1)
+            inserir_primeiro(n,l2);
     } while (n!=-1);
 
     compara_LE(l1,l2);
 
+    liberar_LE(l1);
+    liberar_LE(l2);
     
 
 
