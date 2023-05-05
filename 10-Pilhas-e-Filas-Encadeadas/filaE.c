@@ -103,7 +103,7 @@ int desenfileirar(FilaE* f){
 // verifica o item que está no início fila
 int verificar_inicio(FilaE *f){
     if (!filaE_vazia(f))
-        return f>inicio->item;
+        return f->inicio->item;
     else
         return INT_MIN;
 }
