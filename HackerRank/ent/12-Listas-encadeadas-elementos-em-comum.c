@@ -210,29 +210,30 @@ void inserir_ordenado(int key, ListaE *l){
 
         // Verificar se a lista está vazia ou se o key é menor
         // que o primeiro elemento.
-        if ((l->head == NULL) || (l->head->item <= key)){
+        if ((l->head == NULL) || (l->head->item >= key)){
             nova->next = l->head;
             l->head = nova;
-        }else{
+        }
+        else{
             auxP = auxA = l->head;
 
             // Procurar lugar na lista onde deve ser inserido
             // o nova elemento
-            while((auxA != NULL) && (key > auxA->item)){
-                auxP = auxA; // Guardar o endereço auxA
+            while(( auxP->next != NULL) && (auxP->item <= key)){
+                auxA = auxP; // Guardar o endereço auxA
 
-                auxA = auxA->next; // Atualizar auxA
+                auxP = auxP->next; // Atualizar auxA
             }
-
-            // aqui o auxP terá o maior elemento que tem valor 
-            // menor em comparação com a nova célula, ou seja,
-            // o próximo elemento de auxP passará a ser a nova
-            // célula
-            auxP->next = nova;
-            
-            // A nova célula aponta para auxA, que pode ser nula
-            // ou ter um valor menor igual em relação à nova chave
-            nova->next = auxA;
+            if (auxP->next == NULL && auxP->item <= key)
+            {
+                inserir_ultimo(key,l);
+            }
+            else
+            {
+                nova = criar_celula(key);
+                auxA->next = nova;
+                nova->next = auxP;
+            }
         }
     }
 }
@@ -349,95 +350,29 @@ int tamanho_LE(ListaE *l){
     return tam;
 }
 
+//Verifica se exite uma interceccao entre duas lista 
 void compara_LE(ListaE *l1,ListaE *l2)
 {
     ListaE *l3 = criar_listaE();
-    Cell *aux1, *aux2;
+    Cell *aux1;
     aux1=l1->head;
-    aux2=l2->head;
 
     while(aux1!=NULL) 
     { 
-            int lp=procurar(aux1->item,l2);
+        int lp=procurar(aux1->item,l2);
 
-            if (lp==1)
-            {
-                inserir_primeiro(aux1->item,l3);
-            }
-        //inserir_primeiro(l1->head->item,l3);
-        //l1->head = l1->head->next;
-        
-        /*while(aux2!=NULL) 
+        if (lp==1)
         {
-            int lp=procurar(aux1->item,l2);
-
-            if (lp=l2->head->item)
-            {
-                inserir_primeiro(lp,l3);
-            }
-            
-            //inserir_primeiro(l2->head->item,l3);
-            //l2->head = l2->head->next;
-
-            if (aux2->item==aux1->item)
-            {
-                inserir_primeiro(aux2->item,l3);
-            }
-            aux2=aux2->next;
-
-        }*/
-        aux1 = aux1->next;
-
-          
-    }
-
-
-    /*int lp;
-    //ListaE *l3 = criar_listaE();
-
-    while (l1->head)
-    {
-        l1->head = l1->head->next;
-        while (l2->head)
-        {
-            l2->head = l2->head->next;
-
-            lp=procurar(l1->head->item,l2);
-
-            if (lp=l2->head->item)
-            {
-                inserir_ordenado(lp,l3);
-            }
-            
-        } 
-        
-    }*/
-
-    /*int tam=tamanho_LE(l1), tam2=tamanho_LE(l2),i;
-
-    for (i = 0; i < tam; i++)
-    {
-        l1->head = l1->head->next;
-
-        for ( i = 0; i < tam2; i++)
-        {
-            l2->head = l2->head->next;
-            if (l1->head=l2->head)
-            {
-                int aux=l1->head->item;
-                inserir_primeiro(aux,l3);
-            }
-            
+            inserir_ordenado(aux1->item,l3);
         }
-        
-    }*/
-    
 
+        aux1 = aux1->next;
+  
+    }
 
     imprimir(l3);
     liberar_LE(l3);
     
-
 }
 int main(void)
 {
@@ -466,9 +401,6 @@ int main(void)
     liberar_LE(l1);
     liberar_LE(l2);
     
-
-
-
 
     return 0;
 }
