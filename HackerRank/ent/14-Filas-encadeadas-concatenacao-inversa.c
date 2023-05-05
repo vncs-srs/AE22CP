@@ -40,7 +40,7 @@ Sample Output 0
 #include <stdlib.h>
 #include <limits.h>
 
-
+typedef struct Cell Cell; // Renomeação da struct Cell
 
 // Estrutura para representar células
 struct Cell{
@@ -51,7 +51,7 @@ struct Cell{
     Cell *next;
 };
 
-typedef struct Cell Cell; // Renomeação da struct Cell
+
 
 typedef struct FilaE FilaE; // Renomeação da estruct FilaE
 
@@ -218,31 +218,30 @@ int liberar_filaE(FilaE* f){
     return 0;
 }
 
-int concatena_FilaE(FilaE *f1,FilaE *f2,FilaE *f3)
+void concatena_FilaE(FilaE *f1,FilaE *f2)
 {
-    Cell *aux1,*aux2;
+    FilaE *f3 = criar_filaE();
 
-    aux1=f1->fim;
-    aux2=f2->fim;
-
-
-    while (aux2!=NULL)
+    while (f2!=NULL)
     {
-        enfileirar(desenfileirar(aux2),f3);
+        enfileirar(desenfileirar(f2),f3);
     }
-    while (aux2!=NULL)
+    imprimir_fila(f3);
+    while (f1!=NULL)
     {
-        enfileirar(desenfileirar(aux1),f3);
+        enfileirar(desenfileirar(f1),f3);
     }
 
-    return f3;
+    
+
+    liberar_filaE(f3);
+
 }
 
 int main(void)
 {
     FilaE *f1 = criar_filaE();
     FilaE *f2 = criar_filaE();
-    FilaE *f3 = criar_filaE();
 
 
     int n;
@@ -254,23 +253,22 @@ int main(void)
             enfileirar(n,f1);
     }
     imprimir_fila(f1);
+    n=0;
     while (n!=-1)
     {
         scanf("%d",&n);
         if(n!=-1)
             enfileirar(n,f2);
     }
-    imprimir_fila(f1);
+    imprimir_fila(f2);
 
 
-    concatena_FilaE(f1,f2,f3);
+    concatena_FilaE(f1,f2);
     
 
-    imprimir_fila(f3);
 
     liberar_filaE(f1);
     liberar_filaE(f2);
-    liberar_filaE(f3);
 
 
 
