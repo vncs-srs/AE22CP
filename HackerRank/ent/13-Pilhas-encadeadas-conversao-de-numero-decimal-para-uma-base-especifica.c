@@ -38,6 +38,8 @@ Sample Output 1
 #include <stdlib.h>
 #include <limits.h>
 
+typedef struct Cell Cell; // Renomeação da struct Cell
+
 // Estrutura para representar células
 struct Cell{
     int item; // Pode ser uma struct, union, ou quanquer tipo de dados. 
@@ -47,7 +49,6 @@ struct Cell{
     Cell *next;
 };
 
-typedef struct Cell Cell; // Renomeação da struct Cell
 
 typedef struct PilhaE PilhaE;  // Renomeação da struct PilhaE
 
@@ -192,20 +193,75 @@ int liberar_pilha(PilhaE *p){
 
     return 0;
 }
+//Calcula da base decimal para binario
+void binario(int decimal,PilhaE *p)
+{
+    int i = 0,resto;
+    while (decimal > 0) {
+        resto = decimal % 2;
+        empilhar(p,resto);
+        decimal = decimal / 2;
+        i++;
+    }
 
+}
+//Calcula da base decimal para octal
+void octal(int decimal,PilhaE *p)
+{
+    int octal = 0, i = 1;
+
+    while (decimal != 0)
+    {
+        octal += (decimal % 8) * i;
+        empilhar(octal,p);
+        decimal /= 8;
+        i *= 10;
+    }
+
+    //return octal;
+}
+//Calcula da base decimal para hexadecimal
+void hexadecimal(int decimal,PilhaE *p)
+{
+    int hexadecimal = 0, i = 1;
+
+    while (decimal != 0)
+    {
+        hexadecimal += (decimal % 16) * i;
+        decimal /= 16;
+        i *= 10;
+    }
+    empilhar(decimal,p);
+
+
+    //return hexadecimal;
+}
 
 int main(void)
 {
-    int num, dec, base;
+    int num, base;
     PilhaE *p1 = criar_pilhaE();
 
     scanf("%d",&num);
-    scanf("%d",&dec);
     scanf("%d",&base);
+    //Escolhe a base conforme o inserido
+    switch (base)
+    {
+        case 2:
+            binario(num,p1);
+            imprimir_pilha(p1);
+            break;
+        case 8:
+            octal(num,p1);
+            break;
+        case 16:
+            hexadecimal(num,p1);
+            int hexa=desempilhar(p1);
+            printf("%x\n",hexa);
 
-    empilhar(num,p1);
-
-
+        default:
+            break;
+    }
 
 
     liberar_pilha(p1);
