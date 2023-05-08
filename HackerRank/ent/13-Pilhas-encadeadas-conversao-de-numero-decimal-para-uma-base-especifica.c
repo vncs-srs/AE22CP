@@ -199,7 +199,7 @@ void binario(int decimal,PilhaE *p)
     int i = 0,resto;
     while (decimal > 0) {
         resto = decimal % 2;
-        empilhar(p,resto);
+        empilhar(resto,p);
         decimal = decimal / 2;
         i++;
     }
@@ -213,15 +213,15 @@ void octal(int decimal,PilhaE *p)
     while (decimal != 0)
     {
         octal += (decimal % 8) * i;
-        empilhar(octal,p);
         decimal /= 8;
         i *= 10;
     }
+    empilhar(octal,p);
 
     //return octal;
 }
 //Calcula da base decimal para hexadecimal
-void hexadecimal(int decimal,PilhaE *p)
+/*void hexadecimal(int decimal,PilhaE *p)
 {
     int hexadecimal = 0, i = 1;
 
@@ -231,11 +231,11 @@ void hexadecimal(int decimal,PilhaE *p)
         decimal /= 16;
         i *= 10;
     }
-    empilhar(decimal,p);
+    empilhar(hexadecimal,p);
 
 
     //return hexadecimal;
-}
+}*/
 
 int main(void)
 {
@@ -253,11 +253,12 @@ int main(void)
             break;
         case 8:
             octal(num,p1);
+            imprimir_pilha(p1);
             break;
         case 16:
-            hexadecimal(num,p1);
-            int hexa=desempilhar(p1);
-            printf("%x\n",hexa);
+            //hexadecimal(num,p1);
+            //printf("%x\n",desempilhar(&p1));
+            printf("%x\n",num);
 
         default:
             break;
