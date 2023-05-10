@@ -246,20 +246,21 @@ int main(void)
 
     int n;
 
-    while (n!=-1)
+    do
     {
         scanf("%d",&n);
         if(n!=-1)
             enfileirar(n,f1);
-    }
+    }while (n!=-1);
     imprimir_fila(f1);
-    n=0;
-    while (n!=-1)
+
+    do
     {
         scanf("%d",&n);
         if(n!=-1)
             enfileirar(n,f2);
-    }
+    }while (n!=-1);
+    
     imprimir_fila(f2);
 
 
