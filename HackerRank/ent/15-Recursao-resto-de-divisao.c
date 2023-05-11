@@ -30,9 +30,12 @@ Sample Output 0
 #include <stdlib.h>
 
 
-int resto_rec(int numerodor,int divisor)
+int resto_rec(int numerador,int divisor)
 {
-    return numerodor%divisor;
+    if (numerador < divisor)
+        return numerador;
+    else
+        return resto_rec(numerador%divisor, numerador);
 }
 void imprimir(int vetor[],int n)
 {
