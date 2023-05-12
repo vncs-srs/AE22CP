@@ -40,6 +40,8 @@ Sample Output 0
 #include <stdlib.h>
 #include <limits.h>
 
+#define TAM_MAX 100
+
 typedef struct Cell Cell; // Renomeação da struct Cell
 
 // Estrutura para representar células
@@ -54,6 +56,7 @@ struct Cell{
 
 
 typedef struct FilaE FilaE; // Renomeação da estruct FilaE
+typedef struct Pilha Pilha;
 
 // Cria uma nova célula
 Cell* criar_celula(int key);
@@ -82,10 +85,42 @@ void imprimir_fila(FilaE* f);
 // Desalocar a fila
 int liberar_filaE(FilaE* f);
 
+// Criar uma pilha vazia
+Pilha* criar_pilha();
+
+// Verificar se a pilha está cheia (stack overflow)
+int pilha_cheia(Pilha *p);
+
+// Verificar se a pilha está vazia (stack underflow)
+int pilha_vazia(Pilha *p);
+
+// Inserir um novo item na pilha, caso houver espaço
+int empilhar(Pilha *p, int chave);
+
+// Remover item do topo da pilha, caso essa estrutura não estiver vazia
+int desempilhar(Pilha *p);
+
+// Imprimir conteúdo da pilha
+void imprimir_pilha(Pilha *p);
+
+// Liberar a pilha
+void liberar_pilha(Pilha *p);
+
+// Obter a posição da pilha em que está o topo
+int obter_posicao_topo(Pilha *p);
+
+// Retorna o valor que está no topo. Caso a pilha estiver vazia, será retornado INT_MIN.
+int acessar_valor_topo(Pilha *p);
+
 // Estrutura para representar filas encadeadas
 struct FilaE{
     Cell *inicio;
     Cell *fim;
+};
+
+struct Pilha{
+    int item[TAM_MAX];
+    int topo;
 };
 
 
@@ -218,31 +253,166 @@ int liberar_filaE(FilaE* f){
     return 0;
 }
 
-void concatena_FilaE(FilaE *f1,FilaE *f2)
+
+// Criar uma pilha vazia
+Pilha* criar_pilha(){
+    Pilha *p = (Pilha*) malloc(sizeof(Pilha));
+
+    p->topo = -1;
+
+    return p;
+}
+
+// Verificar se a pilha está cheia (stack overflow)
+int pilha_cheia(Pilha *p){
+    // Uma solução simples
+    // Antes de verificar o topo da pilha, primeiro devemos verificar se
+    // a pilha é nula
+    //return (p != NULL) && p->topo == (TAM_MAX - 1);
+
+    //outra alternativa para implementação dessa função para retornar
+    //-1: se a pilha for nula
+    // 0: se a pilha não estiver cheia
+    // 1: se a pilha estiver cheia
+    if (p == NULL)
+        return -1;
+    else if (p->topo >= (TAM_MAX - 1))
+        return 1;
+    else
+        return 0;
+}
+
+// Verificar se a pilha está vazia (stack underflow)
+int pilha_vazia(Pilha *p){
+    // Uma solução simples
+    // Pilha nula ou com o topo igual a -1 é uma pilha vazia
+    //return (p == NULL) || (p->topo == -1);
+
+    //outra alternativa para implementação dessa função para retornar
+    //-1: se a pilha for nula
+    // 0: se a pilha não estiver vazia
+    // 1: se a pilha estiver vazia
+    if (p == NULL)
+        return -1;
+    else if (p->topo < 0)
+        return 1;
+    else
+        return 0;
+}
+
+// Inserir um novo item na pilha, caso houver espaço
+int empilhar(Pilha *p, int item){
+    // Se a pilha for nula, reservar um espaço na memória para ela
+    if (p == NULL)
+        p = criar_pilha();
+
+    // Se a pilha não estiver cheia, empilhar um item
+    // ! => operação lógica de negação
+    // Exemplos:
+    // !0 = 1
+    // !(número diferente de 0) = 0
+    // Caso a pilha seja nula, antes de entrar no comando if, ela é criada
+    // ou seja, não precisa fazer "if (pilha_cheia(p) == 0)"
+    if (!pilha_cheia(p)){
+        p->topo++; // a pilha aumenta
+
+        p->item[p->topo] = item; // um novo item é empilhado
+
+        return 1; // operação bem sucedida
+    }
+
+    return 0; // operação mal sucedida
+}
+
+// Remover item do topo da pilha, caso essa estrutura não estiver vazia
+int desempilhar (Pilha *p){
+    int item = INT_MIN;
+
+    // Verificar se a pilha é vazia (1) ou nula (-1)
+    // A única condição para "entrar" no comando if é a função abaixo
+    // retornar 0, cuja negação é 1
+    // Para qualquer retorno diferente de 0, a negação será 0
+    if (!pilha_vazia(p)){
+        item = p->item[p->topo];
+
+        p->topo--;
+    }
+
+    return item;
+}
+
+// Imprimir conteúdo da pilha
+void imprimir_pilha(Pilha *p){
+    // Uma cópia da pilha deve ser feita, pois podemos ter acesso
+    // aos elementos apenas pela operação desempilhar, ou seja,
+    // se usarmos a pilha original (p), perderíamos os seus dados
+    Pilha aux = *p;
+    int item;
+
+    // Como a variável aux não é ponteiro, para utilizamos o seu
+    // endereço como parâmetro para chamarmos a função pilha_vazia
+    while (!pilha_vazia(&aux)){
+        item = desempilhar(&aux);
+
+        printf("%d\n", item);
+    }
+}
+
+// Liberar a pilha
+void liberar_pilha(Pilha *p){
+    if (p != NULL)
+        free(p);
+}
+
+
+// Obter a posição da pilha em que está o topo
+int obter_posicao_topo(Pilha *p){
+    if (!pilha_vazia(p))
+        return p->topo;
+    else
+        return -1;
+}
+
+
+// Retorna o valor que está no topo. Caso a pilha estiver vazia, será retornado INT_MIN.
+int acessar_valor_topo(Pilha *p){
+    if (!pilha_vazia(p))
+        return p->item[p->topo];
+    else
+        return INT_MIN;
+}
+
+
+
+void concatena_inversa_FilaE(FilaE *f1,FilaE *f2,FilaE *f3)
 {
-    FilaE *f3 = criar_filaE();
+    Pilha *p1 = criar_pilha();
+    Pilha *p2 = criar_pilha();
 
-    while (f2!=NULL)
+    while (filaE_vazia(f1)==0)
     {
-        enfileirar(desenfileirar(f2),f3);
+        empilhar(p1,desenfileirar(f1));
     }
-    imprimir_fila(f3);
-    while (f1!=NULL)
+    while (pilha_vazia(p1)==0)
     {
-        enfileirar(desenfileirar(f1),f3);
+        enfileirar(desempilhar(p1),f3);
     }
-
+    while(filaE_vazia(f2)==0)
+    {
+        empilhar(p2,desenfileirar(f2));
+    }
+    while (pilha_vazia(p2)==0)
+    {
+        enfileirar(desempilhar(p2),f3);
+    }
     
-
-    liberar_filaE(f3);
-
 }
 
 int main(void)
 {
     FilaE *f1 = criar_filaE();
     FilaE *f2 = criar_filaE();
-
+    FilaE *f3 = criar_filaE();
 
     int n;
 
@@ -252,7 +422,6 @@ int main(void)
         if(n!=-1)
             enfileirar(n,f1);
     }while (n!=-1);
-    imprimir_fila(f1);
 
     do
     {
@@ -261,17 +430,13 @@ int main(void)
             enfileirar(n,f2);
     }while (n!=-1);
     
-    imprimir_fila(f2);
+    concatena_inversa_FilaE(f1,f2,f3);
 
-
-    concatena_FilaE(f1,f2);
-    
-
+    imprimir_fila(f3);
 
     liberar_filaE(f1);
     liberar_filaE(f2);
-
-
+    liberar_filaE(f3);
 
     return 0;
 }
