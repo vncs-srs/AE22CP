@@ -35,7 +35,7 @@ int resto_rec(int numerador,int divisor)
     if (numerador < divisor)
         return numerador;
     else
-        return resto_rec(numerador%divisor, numerador);
+        return resto_rec(numerador-divisor, divisor);
 }
 void imprimir(int vetor[],int n)
 {
