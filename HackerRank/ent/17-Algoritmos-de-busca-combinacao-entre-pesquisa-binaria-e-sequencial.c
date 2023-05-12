@@ -62,16 +62,51 @@ Sample Output 2
 int busca_sequencial(int x, int v[], int n)
 {
 	int i;
+    for (i = 0; i < n; i++)
+        printf("%d ",v[i]);
+
+	printf("\n");
+
 	for (i = 0; i < n; i++)
 		if (x == v[i])
 			return i;
-        else
-            return -1;
+    return -1;
 }
+
+static int busca_bin(int x, int v[], int ini, int fim){
+	int meio;
+
+	if ((ini == fim) && (x == v[ini]))
+		return ini;
+
+	else if (ini < fim){
+	
+		meio = (ini + fim) / 2;
+
+	
+		if (x == v[meio])
+			return meio;
+	
+		else if (x < v[meio])
+			return busca_bin(x, v, ini, meio - 1);
+		
+		else if(fim - meio <= x)
+			return busca_sequencial(x, v, fim);
+		else
+			return busca_bin(x, v, meio + 1, fim);
+	}else
+		return -1;
+}
+
+
+int busca_binaria_sequencial(int x, int v[] , int n){
+	return busca_bin(x, v, 0, n - 1);
+}
+
 
 int main(void)
 {
-    int num,dim,i;
+    int num,dim,i,m;
 
     scanf("%d",&num);
     scanf("%d",&dim);
@@ -81,7 +116,9 @@ int main(void)
     {
         scanf("%d",&vetor[i]);
     }
-    printf("%d\n",busca_sequencial(num,vetor,dim));
+
+	scanf("%d",&m);
+    printf("%d\n",busca_binaria_sequencial(num,vetor,m));
     
     return 0;
 }
