@@ -76,7 +76,7 @@ int busca_sequencial(int x, int v[], int n)
 static int busca_bin(int x, int v[], int ini, int fim){
 	int meio;
 
-	if ((ini == fim) && (x == v[ini]))
+	if ((fim -ini) == x)
 		return ini;
 
 	else if (ini < fim){
