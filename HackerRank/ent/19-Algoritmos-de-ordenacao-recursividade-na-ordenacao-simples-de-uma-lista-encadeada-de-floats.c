@@ -21,59 +21,59 @@ Sample Output 0
 #include <stdio.h>
 #include <stdlib.h>
 
-
-typedef struct CellDE CellDE; // Renomeação da struct CellDE
+typedef struct Cell Cell; // Renomeação da struct Cell
 
 // Estrutura para representar células
-struct CellDE{
+struct Cell{
     float item; // Pode ser uma struct, union, ou qualquer tipo de dados.
               // Para possibilitar o reuso dessa célula para qualquer
               // tipo de informação, recomendo o uso de ponteiro
               // genérico. Exemplo: void* item;
-    CellDE *previous, *next;
+    Cell *next;
 };
 
 
-// Estrutura para representar listas duplamente encadeadas
-struct ListaDE{
-    CellDE *head; // Ponteiro para o primeiro elemento da lista
+// Estrutura para representar listas encadeadas
+struct ListaE{
+    Cell *head; // Ponteiro para o primeiro elemento da lista
 };
 
-typedef struct ListaDE ListaDE; // Renomeação da struct ListaDE
+typedef struct ListaE ListaE; // Renomeação da struct ListaE
 
 // Cria uma nova célula
-CellDE* criar_celulaDE(float key);
+Cell* criar_celula(float key);
 
 // Função para criar uma lista encadeada
-ListaDE* criar_ListaDE();
+ListaE* criar_listaE();
 
 // Retorna 1 se a lista está vazia ou 0, caso contrário
-int ListaDE_vazia(ListaDE *l);
+int listaE_vazia(ListaE *l);
 
 // Um item é inserido no início da lista
-void inserir(float key, ListaDE *l);
+void inserir(float key, ListaE *l);
 
 // Imprimir o conteúdo da lista
-void imprimir(ListaDE *l);
+void imprimir(ListaE *l);
 
 // Liberar lista
 // Retorna 1 se a operação for bem-sucedida ou 0, caso contrário
-int liberar_LE(ListaDE *l);
+int liberar_LE(ListaE *l);
+
 
 // Cria uma nova célula
-CellDE* criar_celulaDE(float key){
-    CellDE *c = (CellDE*) malloc(sizeof(CellDE));
+Cell* criar_celula(float key){
+    Cell *c = (Cell*) malloc(sizeof(Cell));
     c->item = key;
 
-    c->previous = c->next = NULL;
+    c->next = NULL;
 
     return c;
 }
 
 
 // Função para criar uma lista encadeada
-ListaDE* criar_ListaDE(){
-    ListaDE* l = (ListaDE*) malloc(sizeof(ListaDE));
+ListaE* criar_listaE(){
+    ListaE* l = (ListaE*) malloc(sizeof(ListaE));
 
     l->head = NULL;
 
@@ -82,39 +82,37 @@ ListaDE* criar_ListaDE(){
 
 
 // Retorna 1 se a lista está vazia ou 0, caso contrário
-int ListaDE_vazia(ListaDE *l){
+int listaE_vazia(ListaE *l){
     return (l == NULL) || (l->head == NULL);
 }
 
 // Um item é inserido no início da lista
-void inserir(float key, ListaDE *l){
-    CellDE *aux; // Nova célula
+void inserir(float key, ListaE *l){
+    Cell *aux; // Nova célula
 
     // Caso a lista encadeada seja nula,
     // alocar um espaço para essa estrutura
     if (l == NULL)
-        l = criar_ListaDE();
+        l = criar_listaE();
 
     // Criar nova célula
-    aux = criar_celulaDE(key);
+    aux = criar_celula(key);
 
     // Apontar a nova célula para a cabeça da
     // lista
     aux->next = l->head;
-    l->head->previous = aux;
 
     // Atualizar a cabeça da lista
     l->head = aux;
 }
 
 // Imprimir o conteúdo da lista
-void imprimir(ListaDE *l){
-    CellDE *aux; // Para percorrer a lista, deve ser utilizada
+void imprimir(ListaE *l){
+    Cell *aux; // Para percorrer a lista, deve ser utilizada
     	       // uma variável auxiliar para não perder a
     	       // cabeça da lista
 
-
-    if (!ListaDE_vazia(l)){
+    if (!listaE_vazia(l)){
         aux = l->head;
 
         while (aux != NULL){
@@ -129,8 +127,8 @@ void imprimir(ListaDE *l){
 
 // Liberar lista
 // Retorna 1 se a operação for bem-sucedida ou 0, caso contrário
-int liberar_LE(ListaDE *l){
-    CellDE *aux = NULL; // Para percorrer a lista, deve ser utilizada
+int liberar_LE(ListaE *l){
+    Cell *aux = NULL; // Para percorrer a lista, deve ser utilizada
     	       // uma variável auxiliar para não perder a
     	       // cabeça da lista
 
@@ -155,29 +153,40 @@ int liberar_LE(ListaDE *l){
 }
 
 //Implementação ingênua do bubblesort
-void bubblesort(ListaDE *l, float n){
-	int i, j, x;
-
-	for (i = 0; i < n - 1; i++)
-		for (j = 0; j < n - i - 1; j++)
-			if (v[j] > v[j + 1]){
-				x = v[j];
-				v[j] = v[j + 1];
-				v[j + 1] = x;
-			}
+void bubblesort(ListaE *l){
+    Cell* auxj = l->head;
+    Cell* auxi = auxj;
+	float x;
+    while (auxi->next != NULL)
+    {
+        while (auxj->next != NULL)
+        {
+            if (auxj->item > auxj->next->item)
+            {
+                x = auxj->item;
+                auxj->item = auxj->next->item;
+                auxj->next->item = x;
+            }
+            auxj= auxj->next;
+        }
+        auxj = l->head;
+        auxi = auxi->next;
+    }
+    
 }
 
 int main(void)
 {
-    ListaDE *l = criar_listaDE();
+    ListaE *l = criar_listaE();
     float n;
     do
     {
         scanf("%f",&n);
-        inserir(n,l);
+        if(n!=-1)
+            inserir(n,l);
     } while (n!=-1);
-    
-    bubblesort(l,n);
+
+    bubblesort(l);
     imprimir(l);
     liberar_LE(l);
     
