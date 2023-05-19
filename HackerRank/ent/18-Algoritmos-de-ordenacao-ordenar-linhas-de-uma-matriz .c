@@ -26,14 +26,42 @@ Sample Output 0
 #include <stdio.h>
 #include <stdlib.h>
 
+void ordenarLinhas(int matriz[][100], int l, int c) {
+    for (int i = 0; i < l; i++) {
+        // Algoritmo de ordenação 
+        for (int j = 0; j < c - 1; j++) {
+            for (int k = j + 1; k < c; k++) {
+                if (matriz[i][k] > matriz[i][j]) {
+                    // Troca os elementos
+                    int aux = matriz[i][j];
+                    matriz[i][j] = matriz[i][k];
+                    matriz[i][k] = aux;
+                }
+            }
+        }
+    }
+}
 
+int main(void) {
+    int l, c;
+    scanf("%d %d", &l, &c);
 
-int main(void)
-{
+    int matriz[l][c];
 
+    for (int i = 0; i < l; i++) {
+        for (int j = 0; j < c; j++) {
+            scanf("%d", &matriz[i][j]);
+        }
+    }
 
+    ordenarLinhas(matriz, l, c);
 
-
+    for (int i = 0; i < l; i++) {
+        for (int j = 0; j < c; j++) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
 
     return 0;
 }
