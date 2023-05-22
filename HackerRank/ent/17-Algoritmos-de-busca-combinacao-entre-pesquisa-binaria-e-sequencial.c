@@ -62,8 +62,13 @@ Sample Output 2
 int busca_sequencial(int x, int v[], int n)
 {
 	int i;
-    for (i = 0; i < n; i++)
-        printf("%d ",v[i]);
+	if (x>n)
+		for (i = x-n-1; i < x-1; i++)
+        	printf("%d ",v[i]);
+	
+	else
+		for(i = 0;i < n;i++)
+        	printf("%d ",v[i]);
 
 	printf("\n");
 
@@ -81,17 +86,19 @@ static int busca_bin(int x, int v[], int ini, int fim){
 
 	else if (ini < fim){
 	
-		meio = (ini + fim) / 2;
+		meio = ini + (fim - ini) * (x - v[ini]) / (v[fim] - v[ini]);
 
 	
 		if (x == v[meio])
-			return meio;
-	
-		else if (x < v[meio])
-			return busca_bin(x, v, ini, meio - 1);
-		
+		{	
+			if (meio < fim)
+				return busca_sequencial(x, v, fim);
+			else
+				return meio;
+		}
 		else if(fim - meio <= x)
 			return busca_sequencial(x, v, fim);
+
 		else
 			return busca_bin(x, v, meio + 1, fim);
 	}else
