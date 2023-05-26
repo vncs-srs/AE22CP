@@ -84,23 +84,21 @@ static int busca_bin(int x, int v[], int ini, int fim){
 	if ((fim -ini) == x)
 		return ini;
 
-	else if (ini < fim){
-	
-		meio = ini + (fim - ini) * (x - v[ini]) / (v[fim] - v[ini]);
+    else if (ini < fim){
+    
+        meio = (ini+fim)/2;
 
-	
-		if (x == v[meio])
-		{	
-			if (meio < fim)
-				return busca_sequencial(x, v, fim);
-			else
-				return meio;
-		}
-		else if(fim - meio <= x)
-			return busca_sequencial(x, v, fim);
+        if (x == v[meio])   
+            return meio;
+        
+        else if (meio < fim)
+            return busca_sequencial(x, v, fim);
+        
+        else if(fim - meio <= x)
+            return busca_sequencial(x, v, fim);
 
-		else
-			return busca_bin(x, v, meio + 1, fim);
+        else
+            return busca_bin(x, v, meio + 1, fim);
 	}else
 		return -1;
 }
