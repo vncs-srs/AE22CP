@@ -48,6 +48,8 @@ roberto 98 matematica 0.62*/
 #include <string.h>
 #include <limits.h>
 
+#define dim 100
+
 typedef struct{
     int matricula;
     char* nome;
@@ -55,10 +57,62 @@ typedef struct{
     float coef;
 }Aluno;
 
+void troca(Aluno* a, Aluno* b){
+    Aluno aux = *a;
+    *a = *b;
+    *b = aux;
+}
+
+int comparar(Aluno v[], int menor, int maior){
+    char* aux = v[maior].nome;
+    int i = (menor - 1);
+
+    for (int j = menor; j <= maior - 1; j++){
+        if (strcmp(v[j].nome, aux) < 0 || (strcmp(v[j].nome, aux) == 0 && v[j].matricula < v[maior].matricula)){
+            i++;
+            troca(&v[i], &v[j]);
+        }
+    }
+    troca(&v[i + 1], &v[maior]);
+    return (i + 1);
+}
+
+
+
+void quickSort(Aluno v[], int menor, int maior){
+    if (menor < maior){
+        int cp = comparar(v, menor, maior);
+        quickSort(v, menor, cp - 1);
+        quickSort(v, cp + 1, maior);
+    }
+}
+
+void imprimir_vet_str(Aluno alunos[], int n){
+    int i;
+
+    for (i = 0; i < n; i++)
+        printf("%s %d %s %.2f\n", alunos[i].nome, alunos[i].matricula, alunos[i].curso, alunos[i].coef);
+}
 
 int main(void)
 {
-    
+    int n;
+    scanf("%d",&n);
+    Aluno *alunos =  malloc(n * sizeof(Aluno));
+
+
+    for (int i = 0; i < n; i++)
+    {
+        scanf("%d",&alunos[i].matricula);
+
+        alunos[i].nome = (char*) malloc((dim+1) * sizeof(char));
+        alunos[i].curso = (char*) malloc((dim +1) * sizeof(char));
+
+        scanf("%s %s %f", alunos[i].nome, alunos[i].curso, &alunos[i].coef);
+    }
+    quickSort(alunos, 0, n-1);
+
+    imprimir_vet_str(alunos, n);
 
 
 

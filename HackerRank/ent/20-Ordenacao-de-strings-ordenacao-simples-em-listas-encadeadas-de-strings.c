@@ -40,7 +40,7 @@ typedef struct Cell Cell; // Renomeação da struct Cell
 
 // Estrutura para representar células
 struct Cell{
-    char item; // Pode ser uma struct, union, ou qualquer tipo de dados.
+    char item[30]; // Pode ser uma struct, union, ou qualquer tipo de dados.
               // Para possibilitar o reuso dessa célula para qualquer
               // tipo de informação, recomendo o uso de ponteiro
               // genérico. Exemplo: void* item;
@@ -57,7 +57,7 @@ struct ListaE{
 typedef struct ListaE ListaE; // Renomeação da struct ListaE
 
 // Cria uma nova célula
-Cell* criar_celula(char key);
+Cell* criar_celula(char key[]);
 
 // Função para criar uma lista encadeada
 ListaE* criar_listaE();
@@ -65,22 +65,11 @@ ListaE* criar_listaE();
 // Retorna 1 se a lista está vazia ou 0, caso contrário
 char listaE_vazia(ListaE *l);
 
-// Verifica se um item existe na lista
-char procurar(char key, ListaE *l);
-
 // Um item é inserido no início da lista
-void inserir_primeiro(char key, ListaE *l);
+void inserir_primeiro(char key[], ListaE *l);
 
 // Um item é inserido no final da lista
-void inserir_ultimo(char key, ListaE *l);
-
-// Um item é inserido de forma ordenada na lista
-void inserir_ordenado(char key, ListaE *l);
-
-// O item procurado e removido da lista caso ela. Para isso, a lista não deve estar vazia e o item
-// deve existir.
-// A função retorna 1 se a operação for bem sucedida ou 0, caso contrário
-char remover(char key, ListaE *l);
+void inserir_ultimo(char key[], ListaE *l);
 
 // Imprimir o conteúdo da lista
 void imprimir(ListaE *l);
@@ -89,19 +78,15 @@ void imprimir(ListaE *l);
 // Retorna 1 se a operação for bem-sucedida ou 0, caso contrário
 char liberar_LE(ListaE *l);
 
-// Obter o tamanho de uma lista encadeada
-char tamanho_LE(ListaE *l);
-
 // Cria uma nova célula
-Cell* criar_celula(char key){
+Cell* criar_celula(char key[]){
     Cell *c = (Cell*) malloc(sizeof(Cell));
-    c->item = key;
+    strcpy(c->item,key);
 
     c->next = NULL;
 
     return c;
 }
-
 
 // Função para criar uma lista encadeada
 ListaE* criar_listaE(){
@@ -112,39 +97,13 @@ ListaE* criar_listaE(){
     return l;
 }
 
-
 // Retorna 1 se a lista está vazia ou 0, caso contrário
 char listaE_vazia(ListaE *l){
     return (l == NULL) || (l->head == NULL);
 }
 
-
-// Verifica se um item existe na lista
-char procurar(char key, ListaE *l){
-    Cell *aux; // Para percorrer a lista, deve ser utilizada
-    	       // uma variável auxiliar para não perder a
-    	       // cabeça da lista
-
-    if (l != NULL){
-        aux = l->head;
-
-	// Percorrer a lista encadeada: enquanto a chave não
-	// for encotrada e o valor nulo (NULL) não for
-	// alcançado, percorrer cada célula
-        while (aux != NULL){
-            if (aux->item == key)
-            	return 1;
-
-            aux = aux->next;
-        }
-    }
-
-    return 0;
-}
-
-
 // Um item é inserido no início da lista
-void inserir_primeiro(char key, ListaE *l){
+void inserir_primeiro(char key[], ListaE *l){
     Cell *aux; // Nova célula
 
     // Caso a lista encadeada seja nula,
@@ -165,7 +124,7 @@ void inserir_primeiro(char key, ListaE *l){
 
 
 // Um item é inserido no final da lista
-void inserir_ultimo(char key, ListaE *l){
+void inserir_ultimo(char key[], ListaE *l){
     Cell *aux, *nova; // célula auxiliar e nova,
                       // respectivamente
 
@@ -196,93 +155,6 @@ void inserir_ultimo(char key, ListaE *l){
 }
 
 
-void inserir_ordenado(char key, ListaE *l){
-    Cell *auxA, *auxP, *nova; // células auxiliares
-    
-    // Caso a lista encadeada seja nula,
-    // alocar um espaço para essa estrutura
-    if (l == NULL)
-        l = criar_listaE();
-
-    if (listaE_vazia(l))
-        inserir_primeiro(key, l);
-    else{
-        nova = criar_celula(key);
-
-        // Verificar se a lista está vazia ou se o key é menor
-        // que o primeiro elemento.
-        if ((l->head == NULL) || (l->head->item <= key)){
-            nova->next = l->head;
-            l->head = nova;
-        }else{
-            auxP = auxA = l->head;
-
-            // Procurar lugar na lista onde deve ser inserido
-            // o nova elemento
-            while((auxA != NULL) && (key > auxA->item)){
-                auxP = auxA; // Guardar o endereço auxA
-
-                auxA = auxA->next; // Atualizar auxA
-            }
-
-            // aqui o auxP terá o maior elemento que tem valor 
-            // menor em comparação com a nova célula, ou seja,
-            // o próximo elemento de auxP passará a ser a nova
-            // célula
-            auxP->next = nova;
-            
-            // A nova célula aponta para auxA, que pode ser nula
-            // ou ter um valor menor igual em relação à nova chave
-            nova->next = auxA;
-        }
-    }
-}
-
-
-/* O item procurado e removido da lista caso ela. Para isso,
- a lista não deve estar vazia e o item deve existir.
- A função retorna 1 se a operação for bem sucedida ou 0,
- caso contrário*/
-char remover(char key, ListaE *l){
-    Cell *auxA, *auxP = NULL; // células auxiliares
-
-    if (!listaE_vazia(l)){
-        auxA = l->head; // apontar o auxA para a cabeça da lista
-
-        // Verificar se o elemento está na cabeça da lista
-        if(auxA->item == key){
-            // Atualizar a cabeça
-            l->head = l->head->next;
-        }else{
-            // apontar auxP para auxA
-            auxP = auxA;
-
-            // Procurar a célula que deve ser removida
-            while((auxA != NULL) && (auxA->item != key)){
-                auxP = auxA; // Guardar o endereço auxA
-
-                auxA = auxA->next; // Atualizar auxA
-            }
-        }
-
-        if (auxA != NULL){
-            // Caso a chave seja encontrada, ou seja, auxA diferente de
-            // nulo, fazer a célula predecessora (auxP) apontar o ponteiro
-            // "next" para o próximo elemento de auxA.
-            // Esta comparação é necessária, pois o elemento a ser removido
-            // pode ser a primeira célula da lista, na qual auxP == NULL
-            if (auxP != NULL)
-            	auxP->next = auxA->next; // funciona mesmo se auxP for igual a auxA
-
-            // Agora, a célula auxA pode ser removida com segurança
-            free(auxA);
-
-            return 1; // Operação bem-sucedida
-        }
-    }
-
-    return 0;
-}
 
 
 // Imprimir o conteúdo da lista
@@ -295,12 +167,12 @@ void imprimir(ListaE *l){
         aux = l->head;
 
         while (aux != NULL){
-            prcharf("%d ", aux->item);
+            printf("%s \n", aux->item);
 
             aux = aux->next;
         }
 
-        prcharf("\n");
+        printf("\n");
     }
 }
 
@@ -331,38 +203,73 @@ char liberar_LE(ListaE *l){
     return 0;
 }
 
-
-// Obter o tamanho de uma lista encadeada
-char tamanho_LE(ListaE *l){
-    Cell *aux;
-    char tam = 0;
-
-     if (!listaE_vazia(l)){
-        aux = l->head;
-
-        while(aux != NULL){
-            aux = aux->next;
-
-            tam++;
-        }
-    }
-
-    return tam;
+int comparar_char(char c1, char c2){
+    if (c1 == c2) return 0;
+    else if (c1 < c2) return -1;
+    else return 1;
 }
+
+
+int comparar(char s1[], char s2[]){
+	int i;
+
+	for (i = 0; (s1[i] == s2[i]) && (s1[i] != '\0') && (s2[i] != '\0'); i++);
+
+	return comparar_char(s1[i], s2[i]);
+}
+
+
+void troca(char **vstr, int p1, int p2){
+    char *str;
+
+    str = vstr[p1];
+    vstr[p1] = vstr[p2];
+    vstr[p2] = str;
+}
+
+void bubblesort(ListaE *l){
+    Cell* auxj = l->head;
+    Cell* auxi = auxj;
+	char x[30];
+    while (auxi->next != NULL)
+    {
+        while (auxj->next != NULL)
+        {
+            if (comparar(auxj->item ,auxj->next->item)>0)
+            {
+                strcpy(x , auxj->item);
+                strcpy(auxj->item , auxj->next->item);
+                strcpy(auxj->next->item , x);
+            }
+            auxj= auxj->next;
+        }
+        auxj = l->head;
+        auxi = auxi->next;
+    }
+    
+}
+
+
 
 int main(void)
 {
     int n;
-    char s[10];
+    char s[30];
+
     ListaE *l = criar_listaE();
 
     scanf("%d",&n);
 
     for (int i = 0; i < n; i++)
     {
+        
         scanf("%s",s);
-        inserir_ordenado(s,l);
+        inserir_primeiro(s,l);
     }
+    bubblesort(l);
+    imprimir(l);
+
+    liberar_LE(l);
     
 
 
