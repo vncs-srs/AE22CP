@@ -252,40 +252,62 @@ void imprimir(Spa_Mat* mat){
         for (j; j < mat->n_col; j++)
             printf("0 ");
 
-        printf("\n");
     }
+    printf("\n");
+}
+
+int procura_vetor(Spa_Mat* mat, int* vec) {
+    for (int i = 0; i < mat->n_lin; i++) {
+        Cell* aux = mat->lin[i]->head;
+        int item = 1;
+        while (aux != NULL) {
+            if (vec[aux->col] != aux->item) {
+                item = 0;
+                break;
+            }
+            aux = aux->next;
+        }
+        if (item) return i;
+    }
+    return -1;
 }
 
 int main(void)
 {
     int lin, col,n,key;
-    Spa_Mat matriz;
 
     scanf("%d %d ",&lin,&col);
+    
+    Spa_Mat *matriz = criar(lin,col);
 
     for (int i = 0; i < lin; i++)
     {
         for (int j = 0; j < col; j++)
         {
             scanf("%d",&n);
-            trocar(n,lin,col,&matriz);
+            trocar(n,i,j,matriz);
         }       
     }
+    int vetor[col],num;
+    for (int i = 0; i < col; i++)
+    {
+        scanf("%d",&num);
+        vetor[i]=num;
+    }
+    
     scanf("%d",&key);
 
-    imprimir(&matriz);
+    int busca=procura_vetor(matriz,vetor);
 
-    int busca=buscar(key,&matriz);
-    if (busca==1)
+    if (busca!=-1)
     {
-        for (int i = 0; i < lin; i++)
-        {
-            printf("%d ");
-        }
+        printf("%d",busca);
     }
     else
-        printf("-1");
-    
+    {
+        printf("-1\n");
+    }
+
 
     return 0;
 }
