@@ -205,44 +205,96 @@ void trocar(int item, int l, int c, Spa_Mat* mat){
     }
 }
 
-void somarColunas(Spa_Mat *matriz, int *vetorSoma,int l,int c) 
+void somarColunas(Spa_Mat *matriz, int vetorSoma[],int l,int c) 
 {
     int aux[l];
     for (int i = 0; i < l; i++)
     {
+        aux[i]=0;
+
         for (int j = 0; j < c; j++)
         {
-            vetorSoma[i] += buscar_pos(i,j,matriz);
-            
+            aux[i] += buscar_pos(i,j,matriz);
+            printf(" aus %d",aux[i]);
         }
+        vetorSoma[i]=aux[i];
+        printf(" vetor %d \n",vetorSoma[i]);
+    }
+}
+void imprimir(Spa_Mat* mat){
+    int i, j;
+    Cell* aux;
+
+    for (i = 0; i < mat->n_lin; i++){
+        aux = mat->lin[i]->head;
+        j = 0;
+
+        while (aux != NULL){
+            while (j < aux->col){
+                printf("0 ");
+                j++;
+            }
+
+            printf("%d ", aux->item);
+            j++;
+            aux = aux->next;
+        }
+
+        for (j; j < mat->n_col; j++)
+            printf("0 ");
+
+        printf("\n");
+    }
+}
+void liberar_matriz(Spa_Mat* mat){
+    int i;
+    Cell *auxA, *auxP;
+
+    if (mat != NULL){
+        for (i = 0; i < mat->n_lin; i++){
+            auxA = mat->lin[i]->head;
+            while (auxA != NULL){
+                auxP = auxA->next;
+                free(auxA);
+                auxA = auxP;
+            }
+            //free(mat->lin[i]);
+        }
+        free(mat->lin);
+        free(mat);
     }
 }
 
 int main(void)
 {
     int lin, col,n;
-    Spa_Mat matriz;
+    
+    scanf("%d %d",&lin,&col);
 
-    scanf("%d %d ",&lin,&col);
+    Spa_Mat *matriz = criar(lin,col);
 
     for (int i = 0; i < lin; i++)
     {
         for (int j = 0; j < col; j++)
         {
             scanf("%d",&n);
-            trocar(n,lin,col,&matriz);
+           // printf("%d ",n);
+            trocar(n,i,j,matriz);
         }
-                
+        
     }
-
+    imprimir(matriz);
     int vetorSoma[lin];
 
-    somarColunas(&matriz,vetorSoma,lin,col);
+    somarColunas(matriz,vetorSoma,lin,col);
 
     for(int i=0;i<lin;i++)
         printf("%d ",vetorSoma[lin]);
         
     printf("\n");
+
+
+    liberar_matriz(matriz);
 
     return 0;
 }

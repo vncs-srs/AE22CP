@@ -74,27 +74,57 @@ static int hashingF(int k, int B){
     return k % B;
 }
 
+static int overflow_prog(int hashC, int B, int tentativa){
+    return (hashC + tentativa) % B;
+}
+
 int buscar(int key, HashT *t){
-    if (t != NULL){
-        int x = hashingF(key, t->tam);
+    int x = hashingF(key, t->tam); 
+    int i, rh;
 
-        if (t->buckets[x] == key)
-            return x;
-    }
+    if (t->buckets[x] == key) 
+        return x;
+    else if (t->buckets[x] >= 0){ 
+        rh = x; 
 
-    return -1;
+        while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] >= 0)){
+            rh = overflow_prog(x, t->tam, i); 
+
+            i++; 
+        }
+
+        if ((i < t->tam) && (t->buckets[rh] == key))
+            return rh;
+    }else
+        return -1;
 }
 
 int inserir(int key, HashT *t){
     int x;
+    int i, rh;
 
-    if (t != NULL){
-        x = hashingF(key, t->tam);
+    if ((t != NULL) && (key > 0)){
+        x = hashingF(key, t->tam); 
 
-        if (t->buckets[x] < 0){
+        if (t->buckets[x] <= 0){
             t->buckets[x] = key;
 
             return 1;
+        }else{ 
+            i = 1; 
+            rh = x; 
+
+            while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] > 0)){
+                rh = overflow_prog(x, t->tam, i); 
+
+                i++; 
+            }
+
+            if ((i < t->tam) && (t->buckets[rh] <= 0)){
+                t->buckets[rh] = key;
+
+                return 1;
+            }
         }
     }
 
@@ -105,7 +135,7 @@ int remover(int key, HashT *t){
     int x;
 
     if (t != NULL){
-        x = hashingF(key, t->tam);
+        x = buscar(key, t);
 
         if (t->buckets[x] == key){
             t->buckets[x] = -1;
@@ -148,16 +178,16 @@ multiplica_hash(float c,int chave)
 int main(void)
 {
     float c;
-    int n;
-
-    HashT *myHT = criar;
-
+    int n,key;
 
     scanf("%f %d",&c,&n);
 
+    HashT *myHT = criar(n);
+
     for (int i = 0; i < n; i++)
     {
-        
+        scanf("%d",&key);
+        inserir(key,myHT);
     }
     
 
