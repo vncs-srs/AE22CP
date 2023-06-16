@@ -205,20 +205,19 @@ void trocar(int item, int l, int c, Spa_Mat* mat){
     }
 }
 
-void somarColunas(Spa_Mat *matriz, int vetorSoma[],int l,int c) 
+void somarColunas(Spa_Mat *matriz, int *vetorSoma,int l,int c) 
 {
     int aux[l];
+
     for (int i = 0; i < l; i++)
     {
         aux[i]=0;
 
         for (int j = 0; j < c; j++)
         {
-            aux[i] += buscar_pos(i,j,matriz);
-            printf(" aus %d",aux[i]);
+            aux[i] += buscar_pos(j,i,matriz);
         }
         vetorSoma[i]=aux[i];
-        printf(" vetor %d \n",vetorSoma[i]);
     }
 }
 void imprimir(Spa_Mat* mat){
@@ -278,18 +277,17 @@ int main(void)
         for (int j = 0; j < col; j++)
         {
             scanf("%d",&n);
-           // printf("%d ",n);
             trocar(n,i,j,matriz);
         }
         
     }
-    imprimir(matriz);
+
     int vetorSoma[lin];
 
     somarColunas(matriz,vetorSoma,lin,col);
 
     for(int i=0;i<lin;i++)
-        printf("%d ",vetorSoma[lin]);
+        printf("%d ",vetorSoma[i]);
         
     printf("\n");
 
