@@ -209,11 +209,11 @@ void somarColunas(Spa_Mat *matriz, int *vetorSoma,int l,int c)
 {
     int aux[l];
 
-    for (int i = 0; i < l; i++)
+    for (int i = 0; i < c; i++)
     {
         aux[i]=0;
 
-        for (int j = 0; j < c; j++)
+        for (int j = 0; j < l; j++)
         {
             aux[i] += buscar_pos(j,i,matriz);
         }
@@ -282,11 +282,11 @@ int main(void)
         
     }
 
-    int vetorSoma[lin];
+    int vetorSoma[col];
 
     somarColunas(matriz,vetorSoma,lin,col);
 
-    for(int i=0;i<lin;i++)
+    for(int i=0;i<col;i++)
         printf("%d ",vetorSoma[i]);
         
     printf("\n");
