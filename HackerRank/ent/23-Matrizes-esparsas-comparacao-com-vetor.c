@@ -307,7 +307,7 @@ int main(void)
     {
         printf("-1\n");
     }
-
+    liberar_matriz(matriz);
 
     return 0;
 }
