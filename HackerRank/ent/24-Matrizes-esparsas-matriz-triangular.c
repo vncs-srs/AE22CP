@@ -266,23 +266,39 @@ void imprimir(Spa_Mat* mat){
     }
     printf("\n");
 }
-void verifica_triabgular(int tam ,Spa_Mat* matriz)
+int verifica_triangular_sup(Spa_Mat* mat)
 {
-    int i,j;
-    for (i = 0; i < tam; i++)
+    for (int i = 0; i < mat->n_lin; i++) 
     {
-        for (j = 0; j < tam; j++);
+        Cell *cell = mat->lin[i]->head->next;
+        while (cell != NULL) 
         {
-            if (i!=j)
+            if (i < cell->col && cell->item != 0) 
             {
-                int busca = buscar_pos(tam,tam,matriz);
-                
-            }
-            
+                return 0;
+            }                                    
+            cell = cell->next;
         }
-
     }
+    return 1;
+}
+int verifica_triangular(Spa_Mat* mat)
+{
 
+    for (int i = 0; i < mat->n_lin; i++) 
+    {
+        Cell *cell = mat->lin[i]->head->next;
+        while (cell != NULL) 
+        {
+            if (i > cell->col && cell->item != 0)
+            {
+                return verifica_triangular_sup(mat);
+            }                  
+            cell = cell->next;
+
+        }
+    }
+    return 1;
 }
 
 int main(void)
@@ -302,7 +318,11 @@ int main(void)
         }
         
     }
-    verifica_triabgular(tam,matriz);
+    if (verifica_triangular(matriz))
+        printf("triangular\n");
+    else
+        printf("nao triangular\n");
+
 
     liberar_matriz(matriz);
 
