@@ -55,7 +55,6 @@ Sample Output 0
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "hashT.h"
 
 typedef struct{
     unsigned int tam;
@@ -127,9 +126,9 @@ int inserir(int key, HashT *t){
         if (t->buckets[x] <= 0){
             t->buckets[x] = key;
 
-            return 1;
+            return x;
         }else{ 
-            i = 1; 
+            //i = 1; 
             rh = x; 
 
             while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] > 0)){
@@ -141,12 +140,12 @@ int inserir(int key, HashT *t){
             if ((i < t->tam) && (t->buckets[rh] <= 0)){
                 t->buckets[rh] = key;
 
-                return 1;
+                return rh;
             }
         }
     }
 
-    return 0;
+    return x;
 }
 
 int remover(int key, HashT *t){
@@ -165,13 +164,19 @@ int remover(int key, HashT *t){
     return 0;
 }
 
-
 void imprimir(HashT *t){
     int i;
-    if (t != NULL){
+    if (t != NULL)
+    {
         for (i = 0; i < t->tam; i++)
+        {
+            printf("%d: -> ",i);
             if (t->buckets[i] > 0)
-                printf("%d\n", t->buckets[i]);
+            {
+                printf("%d ", t->buckets[i]);
+            }
+            printf("\n");
+        }
     }
 }
 
@@ -194,24 +199,24 @@ int main(void)
     scanf("%d",&tam);
     scanf("%d",&nkey);
 
+    int pos[nkey];
     HashT *myHT =criar(tam);
 
     for (int i = 0; i < nkey; i++)
     {
         scanf("%d",&key);
-        inserir(key,myHT);
+        pos[i]=inserir(key,myHT);
     }
-    imprimir(myHT);
     for (int i = 0; i < nkey; i++)
     {
-        printf("%d: -> %d -> %d\n",i);
+        printf("%d\n",pos[i]);
     }
-    
+    printf("\n");
+
+    imprimir(myHT);
+
     liberar(myHT);
     
-
-
-
 
     return 0;
 }
