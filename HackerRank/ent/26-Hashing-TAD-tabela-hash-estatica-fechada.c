@@ -47,6 +47,22 @@ typedef struct{
 
 HashT *criar(unsigned int tam);
 
+int buscar(int key, HashT *t);
+
+int inserir(int key, HashT *t);
+
+int remover(int key, HashT *t);
+
+void imprimir(HashT *t);
+
+int liberar(HashT *t);
+
+static int hashingF(int k, int B);
+
+static int rehash(int k, int B);
+
+static int overflow_prog(int hashC, int B, int tentativa);
+
 HashT *criar(unsigned int tam){
     HashT *t = malloc(sizeof(HashT));
     int i;
@@ -60,27 +76,9 @@ HashT *criar(unsigned int tam){
     return t;
 }
 
-int buscar(int key, HashT *t);
-
-int inserir(int key, HashT *t);
-
-int remover(int key, HashT *t);
-
-void imprimir(HashT *t);
-
-int liberar(HashT *t);
-
-static int hashingF(int k, int B){
-    return k % B;
-}
-
-static int overflow_prog(int hashC, int B, int tentativa){
-    return (hashC + tentativa) % B;
-}
-
 int buscar(int key, HashT *t){
     int x = hashingF(key, t->tam); 
-    int i, rh;
+    int i=0, rh;
 
     if (t->buckets[x] == key) 
         return x;
@@ -101,7 +99,7 @@ int buscar(int key, HashT *t){
 
 int inserir(int key, HashT *t){
     int x;
-    int i, rh;
+    int i=1, rh;
 
     if ((t != NULL) && (key > 0)){
         x = hashingF(key, t->tam); 
@@ -110,8 +108,7 @@ int inserir(int key, HashT *t){
             t->buckets[x] = key;
 
             return 1;
-        }else{ 
-            i = 1; 
+        }else{  
             rh = x; 
 
             while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] > 0)){
@@ -123,12 +120,12 @@ int inserir(int key, HashT *t){
             if ((i < t->tam) && (t->buckets[rh] <= 0)){
                 t->buckets[rh] = key;
 
-                return 1;
+                return rh;
             }
         }
     }
 
-    return 0;
+    return -1;
 }
 
 int remover(int key, HashT *t){
@@ -170,9 +167,22 @@ int liberar(HashT *t){
     return 0;
 }
 
-multiplica_hash(float c,int chave)
-{
+static int hashingF(int k, int B){
+    float c = 0.1; 
+    float val = k * c;
+    int intPart = (int)val;
+    float decimalPart = val - intPart;
 
+    return (int)(B * decimalPart);
+}
+static int rehash(int k, int B) {
+    return 1 + k % (B - 1);
+}
+static int overflow_prog(int hashC, int B, int tentativa){
+    int h1 = hashingF(hashC, B);
+    int h2 = rehash(hashC, B);
+
+    return (h1 + tentativa * h2) % B;
 }
 
 int main(void)
@@ -183,13 +193,19 @@ int main(void)
     scanf("%f %d",&c,&n);
 
     HashT *myHT = criar(n);
+    int pos[n];
 
     for (int i = 0; i < n; i++)
     {
         scanf("%d",&key);
-        inserir(key,myHT);
+        pos[i] = inserir(key,myHT);
+    }
+    for ( int i = 0; i < n; i++)
+    {
+        printf("%d\n",pos[i]);
     }
     
+    liberar(myHT);
 
     return 0;
 }
