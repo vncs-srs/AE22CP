@@ -56,13 +56,23 @@ Sample Output 0
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct{
+typedef struct Cell Cell;
+
+typedef struct Cell{
     unsigned int tam;
-    int *buckets;
+    int item;
+    Cell *next;
+}Cell;
+
+typedef struct{
+    int tam;
+    Cell **buckets;
 }HashT;
 
 
 HashT *criar(unsigned int tam);
+
+Cell* criar_celula(int key);
 
 int buscar(int key, HashT *t);
 
@@ -76,6 +86,14 @@ int liberar(HashT *t);
 
 HashT *criar(unsigned int tam){
     HashT *t = malloc(sizeof(HashT));
+
+    t->tam = tam;
+    t->buckets = calloc(tam, sizeof(Cell*));
+
+    return t;
+}
+/*HashT *criar(unsigned int tam){
+    HashT *t = malloc(sizeof(HashT));
     int i;
 
     t->tam = tam;
@@ -85,9 +103,9 @@ HashT *criar(unsigned int tam){
         t->buckets[i] = -1;
 
     return t;
-}
+}*/
 
-static int hashingF(int k, int B){
+int hashingF(int k, int B){
     return k % B;
 }
 
@@ -95,29 +113,33 @@ static int overflow_prog(int hashC, int B, int tentativa){
     return (hashC + tentativa) % B;
 }
 
-int buscar(int key, HashT *t){
-    int x = hashingF(key, t->tam); 
-    int i, rh;
-
-    if (t->buckets[x] == key) 
-        return x;
-    else if (t->buckets[x] >= 0){ 
-        i = 1; 
-        rh = x; 
-
-        while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] >= 0)){
-            rh = overflow_prog(x, t->tam, i); 
-
-            i++; 
-        }
-
-        if ((i < t->tam) && (t->buckets[rh] == key))
-            return rh;
-    }else
-        return -1;
-}
 
 int inserir(int key, HashT *t){
+    int x = hashingF(key, t->tam);
+    Cell *n_cell = criar_celula(key);
+
+    if (t->buckets[x] == NULL) {
+        t->buckets[x] = n_cell;
+        return x;
+    } else {
+        Cell *cell = t->buckets[x];
+        Cell *prev = NULL;
+        while (cell != NULL && cell->item < key) {
+            prev = cell;
+            cell = cell->next;
+        }
+        if (prev == NULL) {
+            n_cell->next = cell;
+            t->buckets[x] = n_cell;
+        } else {
+            n_cell->next = cell;
+            prev->next = n_cell;
+        }
+        
+    }
+    return x;
+}
+/*int inserir(int key, HashT *t){
     int x;
     int i, rh;
 
@@ -146,26 +168,34 @@ int inserir(int key, HashT *t){
     }
 
     return x;
+}*/
+
+Cell* criar_celula(int key){
+    Cell *c = (Cell*) malloc(sizeof(Cell));
+    c->item = key;
+
+    c->next = NULL;
+
+    return c;
 }
 
-int remover(int key, HashT *t){
-    int x;
 
-    if (t != NULL){
-        x = buscar(key, t); 
-
-        if (x >= 0){
-            t->buckets[x] = 0;
-
-            return 1;
-        }
+void imprimir(HashT *t) {
+    for (int i = 0; i < t->tam; i++) {
+        printf("%d: ", i);
+        //if (t->buckets[i] != NULL) {
+            Cell *cell = t->buckets[i];
+            while (cell != NULL) {
+                printf("-> ");
+                printf("%d ", cell->item);
+                cell = cell->next;
+            }
+        //}
+        printf("\n");
     }
-
-    return 0;
 }
-
-void imprimir(HashT *t){
-    int i;
+/*void imprimir(HashT *t){
+    int i;¨
     if (t != NULL)
     {
         for (i = 0; i < t->tam; i++)
@@ -178,10 +208,23 @@ void imprimir(HashT *t){
             printf("\n");
         }
     }
-}
+}*/
 
 int liberar(HashT *t){
-    if (t != NULL){
+        for (int i = 0; i < t->tam; i++) 
+        {
+        Cell *c = t->buckets[i];
+        while (c != NULL) 
+        {
+            Cell *aux = c;
+            c = c->next;
+            free(aux);
+        }
+    }
+    free(t->buckets);
+    free(t);
+
+    /*if (t != NULL){
         free(t->buckets);
 
         free(t);
@@ -189,8 +232,10 @@ int liberar(HashT *t){
         return 1;
     }
 
-    return 0;
+    return 0;*/
 }
+
+
 
 int main(void)
 {
