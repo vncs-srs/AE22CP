@@ -98,7 +98,7 @@ int buscar(int key, HashT *t){
 }
 
 int inserir(int key, HashT *t){
-    int x;
+    int x,h1,h2;
     int i=1, rh;
 
     if ((t != NULL) && (key > 0)){
@@ -107,12 +107,13 @@ int inserir(int key, HashT *t){
         if (t->buckets[x] <= 0){
             t->buckets[x] = key;
 
-            return 1;
+            return x;
         }else{  
             rh = x; 
 
             while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] > 0)){
-                rh = overflow_prog(x, t->tam, i); 
+                //rh = overflow_prog(x, t->tam, i); 
+                
 
                 i++; 
             }
@@ -125,7 +126,7 @@ int inserir(int key, HashT *t){
         }
     }
 
-    return -1;
+    return x;
 }
 
 int remover(int key, HashT *t){
