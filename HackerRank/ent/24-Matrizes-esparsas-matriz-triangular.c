@@ -270,7 +270,7 @@ int verifica_triangular_sup(Spa_Mat* mat)
 {
     for (int i = 0; i < mat->n_lin; i++) 
     {
-        Cell *cell = mat->lin[i]->head->next;
+        Cell *cell = mat->lin[i]->head;
         while (cell != NULL) 
         {
             if (i < cell->col && cell->item != 0) 
@@ -287,7 +287,7 @@ int verifica_triangular(Spa_Mat* mat)
 
     for (int i = 0; i < mat->n_lin; i++) 
     {
-        Cell *cell = mat->lin[i]->head->next;
+        Cell *cell = mat->lin[i]->head;
         while (cell != NULL) 
         {
             if (i > cell->col && cell->item != 0)
