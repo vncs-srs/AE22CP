@@ -55,8 +55,6 @@ static int hashingF(int k, int B,float c);
 
 static int rehash(int k, int B);
 
-static int hashingRH(int hashC, int B, int tentativa, float c);
-
 HashT *criar(unsigned int tam){
     HashT *t = malloc(sizeof(HashT));
     int i;
@@ -82,16 +80,38 @@ static int rehash(int k, int B) {
     return 1 + k % (B - 1);
 }
 
-static int hashingRH(int hashC, int B, int tentativa,float c){
-    int h1 = hashingF(hashC, B, c);
-    int h2 = rehash(hashC, B);
+int buscar(int key, HashT *t,float c){
+    int h1 = hashingF(key, t->tam,c); 
+    int h2 = rehash(key,t->tam);
+    int i, rh;
 
-    return (h1 + tentativa * h2) % B;
+    if (t->buckets[h1] == key) 
+        return h1;
+    else if (t->buckets[h1] >= 0){
+        i = 1; 
+            h2 = 1 + key % (t->tam -1);
+            rh = (h1 +i*h2) % t->tam;
+    
+        while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] >= 0)){
+            rh = (h1 +i*h2) % t->tam;
+            i++;
+        }
+
+
+        if ((i < t->tam) && (t->buckets[rh] == key))
+            return rh;
+    }else
+        return -1;
+    return rh;
 }
 
 int inserir(int key, HashT *t,float c){
     int x;
-    int i=1, rh;
+    int i, rh;
+    int h1 = hashingF(key, t->tam,c); 
+    int h2 = rehash(key,t->tam);
+
+
 
     if ((t != NULL) && (key > 0)){
         x = hashingF(key, t->tam,c); 
@@ -99,24 +119,28 @@ int inserir(int key, HashT *t,float c){
         if (t->buckets[x] <= 0){
             t->buckets[x] = key;
 
-            return x;
-        }else{  
-            rh = x; 
-
+            return 1;
+        }else{ 
+            i = 1; 
+ 
+            h2 = 1 + key % (t->tam -1);
+            rh = (h1 +i*h2) % t->tam;
+            
             while ((i < t->tam) && (t->buckets[rh] != key) && (t->buckets[rh] > 0)){
-                rh = hashingRH(x, t->tam, i,c); 
+                rh = (h1 +i*h2) % t->tam;
                 i++; 
             }
+
 
             if ((i < t->tam) && (t->buckets[rh] <= 0)){
                 t->buckets[rh] = key;
 
-                return rh;
+                return 1;
             }
         }
     }
 
-    return x;
+    return 0;
 }
 
 int liberar(HashT *t){
@@ -134,19 +158,21 @@ int liberar(HashT *t){
 int main(void)
 {
     float c;
-    int n,key;
+    int n,key,tam;
 
     scanf("%f %d",&c,&n);
+    scanf("%d",&tam);
 
     HashT *myHT = criar(n);
-    int pos[n];
+    int pos[tam];
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < tam; i++)
     {
         scanf("%d",&key);
-        pos[i] = inserir(key,myHT,c);
+        inserir(key,myHT,c);
+        pos[i] = buscar(key,myHT,c);
     }
-    for ( int i = 1; i < n; i++)
+    for ( int i = 0; i < tam; i++)
     {
         printf("%d\n",pos[i]);
     }
