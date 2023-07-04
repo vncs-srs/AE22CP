@@ -14,20 +14,35 @@ int filaE_vazia(FilaE* f){
 void enfileirar(int key, FilaE* f){
     PilhaE* paux = criar_pilhaE();
     empilhar(key,paux);
-    empilhar(desempilhar(paux),f);
 }
 
 int desenfileirar(FilaE* f){
     PilhaE* paux = criar_pilhaE();
-    PilhaE* p2aux = criar_pilhaE();
-    empilhar(desempilhar(f),paux);
-    empilhar(desempilhar(paux),p2aux);
-    empilhar(desempilhar(p2aux),f);
-    return desempilhar(f);
+
+    while (!pilhaE_vazia(f))
+        empilhar(desempilhar(f),paux);
+
+    int valor_topo = desempilhar(paux);
+
+    while (!pilhaE_vazia(paux))
+        empilhar(desempilhar(paux),f);
+
+    liberar_pilha(paux);
+    return valor_topo;
 }
 
 void imprimir_fila(FilaE* f){
-    return imprimir_pilha(f);
+    FilaE* aux;
+    aux = criar_filaE();
+    while(!filaE_vazia(f))
+        empilhar(desempilhar(f),aux);
+    
+    imprimir_pilha(aux);
+
+    while(!filaE_vazia(aux))
+        empilhar(desempilhar(aux),f);
+    
+    liberar_pilha(aux);
 }
 
 int liberar_filaE(FilaE* f){

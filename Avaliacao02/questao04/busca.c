@@ -9,7 +9,7 @@ int busca_sequencial(int x, int v[], int n,ListaE *l){
 		if (x == v[i])
 			inserir_ordenado(i,l); // inserir ordenado corrigido 
 
-	l = NULL;
+	return;
 }
 
 
@@ -18,7 +18,7 @@ static int busca_bin(int x, int v[], int ini, int fim,ListaE *l){
 
 
 	if ((ini == fim) && (x == v[ini]))
-		return ini;
+		inserir_ordenado(ini,l);
 
 	else if (ini < fim){
 		
@@ -28,13 +28,12 @@ static int busca_bin(int x, int v[], int ini, int fim,ListaE *l){
 		if (x == v[meio])
 			inserir_ordenado(meio,l);
 
-		else if (x < v[meio])
+		if (x <= v[meio])
 			return busca_bin(x, v, ini, meio - 1,l);
 
-		else
+		if(x>= v[meio])
 			return busca_bin(x, v, meio + 1, fim,l);
-	}else
-		l = NULL;
+    }
 }
 
 
