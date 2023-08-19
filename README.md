@@ -1,5 +1,3 @@
-# AE22CP-2023
-
 ## Algoritimos e Estrutura de Dados 1
 
 Este repositório é referente às aulas de algoritmos 1 do curso de Engenharia de Computação da Universidade Tecnológica Federal do Paraná (UTFPR), Campus Pato Branco. As aulas foram ministradas pela professora Luciene Marin e o material utilizado foi desenvolvido pelo professor [Jerffeson Oliva](https://github.com/jefferson-oliva), disponível [aqui](https://github.com/jefferson-oliva/material_grad).
